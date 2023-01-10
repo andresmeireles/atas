@@ -1,6 +1,8 @@
-import 'package:atas/src/feature/home/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../core/core.dart';
 
 class AddUser extends StatelessWidget {
   const AddUser({super.key});
@@ -8,41 +10,41 @@ class AddUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final name = TextEditingController();
-    final api = CreateUser();
 
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: Column(
-              children: [
-                const Text('qual é o seu nome?'),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: name,
-                    decoration: const InputDecoration(label: Text('nome')),
-                  ),
+      body: BlocConsumer<AppBloc, AppState>(
+        listener: (context, state) {
+          if (state.status == AppStatus.ok) {
+            GoRouter.of(context).go('/home');
+          }
+        },
+        builder: (context, state) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Column(
+                  children: [
+                    const Text('qual é o seu nome?'),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: name,
+                        decoration: const InputDecoration(label: Text('nome')),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<AppBloc>().add(AddUserEvent(name.text));
+                      },
+                      child: const Text('Ok'),
+                    )
+                  ],
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    final router = GoRouter.of(context);
-                    if (name.text.trim().isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('nome precisa ser preenchido')),
-                      );
-                      return;
-                    }
-                    await api.add(name.text);
-                    router.go('/home');
-                  },
-                  child: const Text('Ok'),
-                )
-              ],
-            ),
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }

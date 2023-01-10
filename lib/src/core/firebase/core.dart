@@ -7,18 +7,21 @@ class Core {
 
   Future<Result<DocumentReference<Object?>, String>> save(String document, Map<String, dynamic> map) async {
     try {
-      final doc = await db.collection(document).add(map);
+      final doc = await db.collection('minute').doc('sacramental').collection(document).add(map);
       return Success(doc);
     } catch (e) {
       return Error(e.toString());
     }
   }
 
-  Future<Result<QuerySnapshot, String>> allDocuments(String document) async {
+  Future<Result<DocumentReference, String>> allDocuments(String document) async {
     try {
-      final doc = db.collection(document);
-      final all = await doc.get();
-      return Success(all);
+      final doc = db.collection('minutes').doc(document);
+      final u = await doc.collection('MinuteTypes.sacramental-02-01-2023').get();
+      for (var i in u.docs) {
+        print(i.data());
+      }
+      return Success(doc);
     } catch (e) {
       return Error(e.toString());
     }

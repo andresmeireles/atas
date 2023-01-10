@@ -1,34 +1,27 @@
+import 'package:atas/src/feature/minute/minute.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreatedMinutes extends StatelessWidget {
   const CreatedMinutes({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container();
-    // final api = Minutes();
-    // return Scaffold(
-    //   appBar: AppBar(),
-    //   body: FutureBuilder(
-    //     future: api.all(),
-    //     builder: (context, snapshot) {
-    //       if (snapshot.connectionState == ConnectionState.done) {
-    //         if (snapshot.hasError) {
-    //           return Center(child: Text(snapshot.error.toString()));
-    //         }
-    //         if (!snapshot.hasData) {
-    //           return const Center(child: Text('nao tem data'));
-    //         }
-    //         final data = snapshot.data!;
-    //         return data.when(
-    //           (success) => Container(),
-    //           (error) => Center(child: Text(error)),
-    //         );
-    //       }
-    //       return const Center(child: CircularProgressIndicator());
-    //     },
-    //   ),
-    // );
+    context.read<MinuteBloc>().add(GetExistingMinuteEvent());
+    return Scaffold(
+      appBar: AppBar(),
+      body: BlocBuilder<MinuteBloc, MinuteState>(
+        builder: (context, state) {
+          if (state.status == MinuteStatus.fetching) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state.status == MinuteStatus.errorOnFetching) {
+            return const Text('non ok');
+          }
+          return Text(state.status.name);
+        },
+      ),
+    );
   }
 
   // Widget _minutesList(List<Minute> minutes) {

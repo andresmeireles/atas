@@ -7,5 +7,6 @@ final routes = GoRouter(
     GoRoute(path: '/minutes', builder: (_, __) => const CreatedMinutesController()),
     GoRoute(path: '/create-user', builder: (_, __) => const CreateUserController()),
     GoRoute(path: '/new-minute', builder: (_, __) => const NewMinuteController()),
+    GoRoute(path: '/add-code', builder: (_, __) => const AddSecurityCodeController()),
   ],
 );

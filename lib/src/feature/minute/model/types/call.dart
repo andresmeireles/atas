@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:atas/src/feature/minute/minute.dart';
 
@@ -13,6 +14,8 @@ class Call extends MinuteItem {
   final MinuteItemType type;
   @override
   final DateTime updatedAt;
+  @override
+  final int id;
 
   Call({
     required this.name,
@@ -21,7 +24,9 @@ class Call extends MinuteItem {
     required this.label,
     required this.type,
     DateTime? updatedAt,
-  }) : updatedAt = updatedAt ?? DateTime.now();
+    int? id,
+  })  : updatedAt = updatedAt ?? DateTime.now(),
+        id = id ?? Random().nextInt(100);
 
   @override
   Map<String, dynamic> toMap() {
@@ -32,6 +37,7 @@ class Call extends MinuteItem {
       'label': label.toString(),
       'type': type.toString(),
       'updatedAt': updatedAt.millisecondsSinceEpoch,
+      'id': id,
     };
   }
 
@@ -40,9 +46,10 @@ class Call extends MinuteItem {
       name: map['name'] as String,
       organization: map['organization'] as String,
       call: map['call'] as String,
-      label: MinuteLabel.values.firstWhere((element) => element.toString() == (map['label'] as String)),
-      type: MinuteItemType.values.firstWhere((item) => item.toString() == (map['type'] as String)),
+      label: MinuteLabel.values.firstWhere((e) => e.toString() == map['label'] as String),
+      type: MinuteItemType.values.firstWhere((e) => e.toString() == map['type'] as String),
       updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
+      id: map['id'] as int,
     );
   }
 

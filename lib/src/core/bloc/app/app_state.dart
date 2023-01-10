@@ -3,18 +3,19 @@ part of 'app_bloc.dart';
 
 class AppState extends Equatable {
   final String user;
-  final bool redirect;
+  final int code;
+  final AppStatus status;
 
-  const AppState({required this.user, this.redirect = false});
+  const AppState({required this.user, required this.code, required this.status});
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, code, status];
 
-  AppState copyWith({String? user, bool? redirect}) {
-    return AppState(user: user ?? this.user, redirect: redirect ?? this.redirect);
+  AppState copyWith({String? user, int? code, AppStatus? status}) {
+    return AppState(user: user ?? this.user, code: code ?? this.code, status: status ?? this.status);
   }
 }
 
 class AppInitial extends AppState {
-  const AppInitial() : super(user: '');
+  const AppInitial() : super(user: '', code: 0, status: AppStatus.checking);
 }

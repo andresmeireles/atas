@@ -20,6 +20,7 @@ class MinuteBloc extends Bloc<MinuteEvent, MinuteState> {
   MinuteBloc(List<MinuteItem> item) : super(MinuteInitial(item)) {
     on<AddMinuteItemEvent>(_addMinuteItem);
     on<RemoveItemEvent>(_removeItem);
+    on<GetExistingMinuteEvent>(_getMinutes);
   }
 
   void _addMinuteItem(AddMinuteItemEvent event, Emitter emit) {
@@ -41,5 +42,16 @@ class MinuteBloc extends Bloc<MinuteEvent, MinuteState> {
     emit(state.copyWith(status: MinuteStatus.running));
     currentItems.removeWhere((element) => element.type == item.type && element.label == item.label);
     emit(state.copyWith(items: [...currentItems], status: MinuteStatus.idle));
+  }
+
+  void _getMinutes(GetExistingMinuteEvent event, Emitter emit) async {
+    final api = GetMinutes();
+    emit(state.copyWith(status: MinuteStatus.fetching));
+    final minutes = await api.minutes;
+    minutes.when((success) {
+      emit(state.copyWith(status: MinuteStatus.idle));
+    }, (error) {
+      emit(state.copyWith(status: MinuteStatus.errorOnFetching));
+    });
   }
 }

@@ -12,13 +12,24 @@ class HomeController extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<AppBloc, AppState>(
       listener: (context, state) {
-        if (state.redirect) {
+        final status = state.status;
+        if (status == AppStatus.noCode) {
+          GoRouter.of(context).go('/add-code');
+          return;
+        }
+        if (status == AppStatus.noUser) {
           GoRouter.of(context).go('/create-user');
+          return;
         }
       },
       builder: (context, state) {
-        if (state.user == '') {
-          context.read<AppBloc>().add(const AddUserName());
+        final bloc = context.read<AppBloc>();
+        if (state.code == 0 || state.status == AppStatus.wrongCode) {
+          bloc.add(FetchSecureCodeEvent());
+          return const LoadingScreen();
+        }
+        if (state.code != 0 && state.user == '') {
+          bloc.add(FetUserEvent());
           return const LoadingScreen();
         }
         return const Home();

@@ -8,10 +8,22 @@ abstract class AppEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AddUserName extends AppEvent {
-  const AddUserName();
+class FetUserEvent extends AppEvent {}
+
+class AddUserEvent extends AppEvent {
+  final String? user;
+
+  const AddUserEvent(this.user);
 }
 
 class ClearUserEvent extends AppEvent {
   const ClearUserEvent();
+}
+
+class FetchSecureCodeEvent extends AppEvent {}
+
+class AddCodeEvent extends AppEvent {
+  final int? code;
+
+  const AddCodeEvent(this.code);
 }

@@ -5,7 +5,5 @@ class CreateUserController extends StatelessWidget {
   const CreateUserController({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const AddUser();
-  }
+  Widget build(BuildContext context) => const AddUser();
 }
