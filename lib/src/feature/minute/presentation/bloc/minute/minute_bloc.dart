@@ -1,3 +1,4 @@
+import 'package:atas/src/core/firebase/minutes.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -45,13 +46,9 @@ class MinuteBloc extends Bloc<MinuteEvent, MinuteState> {
   }
 
   void _getMinutes(GetExistingMinuteEvent event, Emitter emit) async {
-    final api = GetMinutes();
+    final api = Minutes();
     emit(state.copyWith(status: MinuteStatus.fetching));
-    final minutes = await api.minutes;
-    minutes.when((success) {
-      emit(state.copyWith(status: MinuteStatus.idle));
-    }, (error) {
-      emit(state.copyWith(status: MinuteStatus.errorOnFetching));
-    });
+    final items = await api.byName(event.name);
+    emit(state.copyWith(items: items, status: MinuteStatus.idle));
   }
 }

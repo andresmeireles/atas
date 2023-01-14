@@ -9,6 +9,13 @@ class NewMinute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final minute = Sacramental();
+    final state = context.select<MinuteBloc, MinuteState>((MinuteBloc bloc) => bloc.state);
+    if (state.status == MinuteStatus.fetching) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('nova ata'),

@@ -4,4 +4,5 @@ export './type_resolver.dart';
 export './types/types.dart';
 export 'label/label.dart';
 export 'minute_label.dart';
+export 'minute_list.dart';
 export 'minute_types.dart';

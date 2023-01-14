@@ -5,10 +5,31 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/core.dart';
 
 class NewMinuteController extends StatelessWidget {
-  const NewMinuteController({super.key});
+  final String? editingMinute;
+
+  const NewMinuteController({this.editingMinute, super.key});
+
+  factory NewMinuteController.editing(String minuteName) {
+    return NewMinuteController(editingMinute: minuteName);
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (editingMinute != null) {
+      return _editing(context);
+    }
+    return _create(context);
+  }
+
+  Widget _editing(BuildContext context) {
+    return BlocBuilder<AppBloc, AppState>(
+      builder: (_, state) {
+        return BlocProvider(create: (_) => MinuteBloc([]), child: EditMinute(editingMinute!));
+      },
+    );
+  }
+
+  Widget _create(BuildContext context) {
     return BlocBuilder<AppBloc, AppState>(
       builder: (_, state) {
         final items = [

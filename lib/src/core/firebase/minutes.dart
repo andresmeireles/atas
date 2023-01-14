@@ -5,7 +5,11 @@ import 'package:intl/intl.dart';
 import '../../feature/minute/minute.dart';
 
 class Minutes extends Core {
-  Future<void> add({required List<MinuteItem> minuteItems, required MinuteTypes type, required String editedBy}) async {
+  Future<String> add({
+    required List<MinuteItem> minuteItems,
+    required MinuteTypes type,
+    required String editedBy,
+  }) async {
     final updatedBy = SimpleText(value: editedBy, label: MinuteLabel.updatedBy, type: MinuteItemType.text);
     minuteItems.add(updatedBy);
     final minuteCollection = db.collection('minutes').doc('sacramental');
@@ -20,9 +24,10 @@ class Minutes extends Core {
     for (var item in minuteItems) {
       await minute.doc('${item.label}-${item.id}').set(item.toMap());
     }
+    return minuteName;
   }
 
-  Future<void> update({
+  Future<String> update({
     required String minuteName,
     required List<MinuteItem> minuteItems,
     required MinuteTypes type,
@@ -55,6 +60,14 @@ class Minutes extends Core {
         toRemove.add(firebaseItem);
       }
     }
+    return minuteName;
+  }
+
+  Future<List<MinuteItem>> byName(String name) async {
+    final minute = await db.collection('minutes').doc('sacramental').collection(name).get();
+    final items = minute.docs.map((e) => _minuteMatcher(e)).toList();
+    print(items.length);
+    return items;
   }
 
   MinuteItem _minuteMatcher(QueryDocumentSnapshot snapshot) {

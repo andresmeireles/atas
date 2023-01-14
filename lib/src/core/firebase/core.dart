@@ -7,7 +7,7 @@ class Core {
 
   Future<Result<DocumentReference<Object?>, String>> save(String document, Map<String, dynamic> map) async {
     try {
-      final doc = await db.collection('minute').doc('sacramental').collection(document).add(map);
+      final doc = await db.collection('minutes').doc('sacramental').collection(document).add(map);
       return Success(doc);
     } catch (e) {
       return Error(e.toString());
@@ -16,11 +16,8 @@ class Core {
 
   Future<Result<DocumentReference, String>> allDocuments(String document) async {
     try {
+      final minutes = db.collection('minutes');
       final doc = db.collection('minutes').doc(document);
-      final u = await doc.collection('MinuteTypes.sacramental-02-01-2023').get();
-      for (var i in u.docs) {
-        print(i.data());
-      }
       return Success(doc);
     } catch (e) {
       return Error(e.toString());

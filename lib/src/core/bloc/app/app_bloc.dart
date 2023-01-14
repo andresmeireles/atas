@@ -1,5 +1,5 @@
 import 'package:atas/src/core/core.dart';
-import 'package:atas/src/core/firebase/firbase.dart' as fb;
+import 'package:atas/src/core/firebase/firebase.dart' as fb;
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

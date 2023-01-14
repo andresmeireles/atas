@@ -1,17 +1,12 @@
-import 'package:atas/src/core/firebase/minutes.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:atas/src/core/firebase/firebase.dart';
+import 'package:atas/src/feature/minute/minute.dart' as app_minute_list;
 import 'package:multiple_result/multiple_result.dart';
 
-class GetMinutes {
-  final _api = Minutes();
+class GetMinute {
+  final _api = MinuteList();
 
-  Future<Result<List<Object?>, String>> get minutes async {
-    final minutes = await _api.allDocuments('sacramental');
-
-    return minutes.when((success) => Success(_organizeMinutes(success)), (error) => Error(error));
-  }
-
-  List<Object?> _organizeMinutes(DocumentReference response) {
-    return [];
+  Future<Result<List<app_minute_list.MinuteList>, String>> get minutes async {
+    final minutes = await _api.minutes;
+    return minutes.when((success) => Success(success), (error) => Error(error));
   }
 }

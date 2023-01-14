@@ -7,30 +7,20 @@ class CreatedMinutes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<MinuteBloc>().add(GetExistingMinuteEvent());
+    context.read<CreatedMinutesBloc>().add(FetchMinutesEvent());
     return Scaffold(
       appBar: AppBar(),
-      body: BlocBuilder<MinuteBloc, MinuteState>(
+      body: BlocBuilder<CreatedMinutesBloc, CreatedMinutesState>(
         builder: (context, state) {
-          if (state.status == MinuteStatus.fetching) {
+          if (state.status == CreatedMinuteStatus.fetching) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (state.status == MinuteStatus.errorOnFetching) {
-            return const Text('non ok');
+          if (state.status == CreatedMinuteStatus.error) {
+            return const Text('erro ao buscar atas');
           }
-          return Text(state.status.name);
+          return CreatedMinuteList(state.minutes);
         },
       ),
     );
   }
-
-  // Widget _minutesList(List<Minute> minutes) {
-  //   return ListView.builder(
-  //     itemCount: minutes.length,
-  //     itemBuilder: (context, index) {
-  //       final minute = minutes[index];
-  //       return ListTile(title: Text('Ata do dia ${minute.createdAt}'));
-  //     },
-  //   );
-  // }
 }

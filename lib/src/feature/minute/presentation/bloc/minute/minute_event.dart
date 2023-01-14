@@ -23,4 +23,10 @@ class RemoveItemEvent extends MinuteEvent {
   const RemoveItemEvent(this.item);
 }
 
-class GetExistingMinuteEvent extends MinuteEvent {}
+class GetExistingMinuteEvent extends MinuteEvent {
+  final String name;
+
+  const GetExistingMinuteEvent({
+    required this.name,
+  });
+}

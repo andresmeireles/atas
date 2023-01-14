@@ -9,7 +9,7 @@ class CreatedMinutesController extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => MinuteBloc([]),
+      create: (_) => CreatedMinutesBloc(),
       child: const _CreatedMinutesController(),
     );
   }
