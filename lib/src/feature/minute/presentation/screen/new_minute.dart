@@ -2,6 +2,7 @@ import 'package:atas/src/core/core.dart';
 import 'package:atas/src/feature/minute/minute.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class NewMinute extends StatelessWidget {
   const NewMinute({super.key});
@@ -50,14 +51,23 @@ class NewMinute extends StatelessWidget {
               );
             },
           ),
-          BlocBuilder<MinuteBloc, MinuteState>(
-            builder: (_, state) {
+          BlocConsumer<MinuteBloc, MinuteState>(
+            listener: (context, state) {
+              final status = state.status;
+              if (status == MinuteStatus.errorOnSave) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('erro ao salvar ata')));
+                return;
+              }
+              if (status == MinuteStatus.saved) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Ata salva com sucesso!')));
+                GoRouter.of(context).go('/home');
+              }
+            },
+            builder: (context, state) {
               return IconButton(
                 onPressed: () async {
-                  final api = SaveMinute(items: state.items, schema: minute);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(await api.submit(context.read<AppBloc>().state.user))),
-                  );
+                  final bloc = context.read<MinuteBloc>();
+                  bloc.add(AddMinuteOnFirebaseEvent(editedBy: context.read<AppBloc>().state.user, schema: minute));
                 },
                 icon: const Icon(Icons.check),
               );

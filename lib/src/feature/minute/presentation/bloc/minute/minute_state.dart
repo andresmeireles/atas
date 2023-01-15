@@ -4,17 +4,19 @@ part of 'minute_bloc.dart';
 class MinuteState extends Equatable {
   final List<MinuteItem> items;
   final MinuteStatus status;
+  final String? error;
 
   const MinuteState({
     required this.items,
     required this.status,
+    this.error,
   });
 
   @override
   List<Object> get props => [items, status];
 
-  MinuteState copyWith({List<MinuteItem>? items, MinuteStatus? status}) {
-    return MinuteState(items: items == null ? this.items : [...items], status: status ?? this.status);
+  MinuteState copyWith({List<MinuteItem>? items, MinuteStatus? status, String? error}) {
+    return MinuteState(items: items == null ? this.items : [...items], status: status ?? this.status, error: error);
   }
 }
 

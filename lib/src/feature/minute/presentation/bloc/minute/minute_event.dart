@@ -30,3 +30,10 @@ class GetExistingMinuteEvent extends MinuteEvent {
     required this.name,
   });
 }
+
+class AddMinuteOnFirebaseEvent extends MinuteEvent {
+  final String editedBy;
+  final SchemaInterface schema;
+
+  const AddMinuteOnFirebaseEvent({required this.editedBy, required this.schema});
+}

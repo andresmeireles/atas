@@ -1,4 +1,5 @@
-import 'package:atas/src/core/firebase/minutes.dart';
+import 'package:atas/src/core/firebase/minute_list.dart' as firebase_minute_list;
+import 'package:atas/src/core/firebase/minutes.dart' as firebase_minute;
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,6 +21,7 @@ class MinuteBloc extends Bloc<MinuteEvent, MinuteState> {
 
   MinuteBloc(List<MinuteItem> item) : super(MinuteInitial(item)) {
     on<AddMinuteItemEvent>(_addMinuteItem);
+    on<AddMinuteOnFirebaseEvent>(_addMinuteOnFirebase);
     on<RemoveItemEvent>(_removeItem);
     on<GetExistingMinuteEvent>(_getMinutes);
   }
@@ -37,6 +39,27 @@ class MinuteBloc extends Bloc<MinuteEvent, MinuteState> {
     emit(state.copyWith(items: newItems, status: MinuteStatus.idle));
   }
 
+  _addMinuteOnFirebase(AddMinuteOnFirebaseEvent event, Emitter emit) async {
+    emit(state.copyWith(status: MinuteStatus.saving));
+    final items = state.items;
+    final schema = event.schema;
+    final submitter = event.editedBy;
+    final firebaseMinute = firebase_minute.Minutes();
+    final firebaseMinuteList = firebase_minute_list.MinuteList();
+    final validate = schema.validate(items);
+    final status = validate.when(
+      (success) async {
+        final minuteName =
+            await firebaseMinute.add(minuteItems: items, type: MinuteTypes.sacramental, editedBy: submitter);
+        final minuteList = MinuteList(name: minuteName, status: MinuteListStatus.closed);
+        await firebaseMinuteList.add(minuteList);
+        return MinuteStatus.saved;
+      },
+      (error) => MinuteStatus.errorOnSave,
+    ) as MinuteStatus;
+    emit(state.copyWith(status: status));
+  }
+
   void _removeItem(RemoveItemEvent event, Emitter emit) {
     final item = event.item;
     final currentItems = state.items;
@@ -46,7 +69,7 @@ class MinuteBloc extends Bloc<MinuteEvent, MinuteState> {
   }
 
   void _getMinutes(GetExistingMinuteEvent event, Emitter emit) async {
-    final api = Minutes();
+    final api = firebase_minute.Minutes();
     emit(state.copyWith(status: MinuteStatus.fetching));
     final items = await api.byName(event.name);
     emit(state.copyWith(items: items, status: MinuteStatus.idle));

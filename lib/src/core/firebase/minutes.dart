@@ -66,7 +66,6 @@ class Minutes extends Core {
   Future<List<MinuteItem>> byName(String name) async {
     final minute = await db.collection('minutes').doc('sacramental').collection(name).get();
     final items = minute.docs.map((e) => _minuteMatcher(e)).toList();
-    print(items.length);
     return items;
   }
 

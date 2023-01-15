@@ -1,3 +1,3 @@
 part of 'minute_bloc.dart';
 
-enum MinuteStatus { idle, saving, running, loadInvalidItem, fetching, errorOnFetching }
+enum MinuteStatus { idle, saving, saved, errorOnSave, running, loadInvalidItem, fetching, errorOnFetching }
