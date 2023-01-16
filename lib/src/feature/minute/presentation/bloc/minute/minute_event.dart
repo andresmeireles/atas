@@ -37,3 +37,5 @@ class AddMinuteOnFirebaseEvent extends MinuteEvent {
 
   const AddMinuteOnFirebaseEvent({required this.editedBy, required this.schema});
 }
+
+class UpdateMinuteEvent extends MinuteEvent {}

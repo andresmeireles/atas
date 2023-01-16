@@ -30,13 +30,28 @@ class Sacramental extends SchemaInterface {
   ];
 
   @override
-  Result<bool, MinuteLabel> validate(List<MinuteItem> minuteItems) {
+  bool validate(List<MinuteItem> minuteItems) {
     for (var item in items) {
       if (item.obligatory) {
         final contains = minuteItems.indexWhere((element) => element.label == item.label) != -1;
-        if (!contains) return Error(item.label);
+        if (!contains) return false;
       }
     }
-    return const Success(true);
+    return true;
+  }
+
+  @override
+  Result<bool, List<MinuteLabel>> missing(List<MinuteItem> minuteItems) {
+    final missingItems = <MinuteLabel>[];
+    for (var item in items) {
+      if (item.obligatory) {
+        final contains = minuteItems.indexWhere((element) => element.label == item.label) != -1;
+        if (!contains) missingItems.add(item.label);
+      }
+    }
+    if (missingItems.isNotEmpty) {
+      return Error(missingItems);
+    }
+    return const Success(false);
   }
 }

@@ -49,17 +49,16 @@ class MinuteBloc extends Bloc<MinuteEvent, MinuteState> {
     final firebaseMinute = firebase_minute.Minutes();
     final firebaseMinuteList = firebase_minute_list.MinuteList();
     final validate = schema.validate(items);
-    final status = validate.when(
-      (success) async {
-        final minuteName =
-            await firebaseMinute.add(minuteItems: items, type: MinuteTypes.sacramental, editedBy: submitter);
-        final minuteList = MinuteList(name: minuteName, status: state.mode);
-        await firebaseMinuteList.add(minuteList);
-        return MinuteStatus.saved;
-      },
-      (error) => MinuteStatus.errorOnSave,
-    ) as MinuteStatus;
-    emit(state.copyWith(status: status));
+    final mode = validate ? MinuteMode.ready : MinuteMode.draw;
+    try {
+      final minuteName =
+          await firebaseMinute.add(minuteItems: items, type: MinuteTypes.sacramental, editedBy: submitter);
+      final minuteList = MinuteList(name: minuteName, status: mode);
+      await firebaseMinuteList.add(minuteList);
+      emit(state.copyWith(status: MinuteStatus.saved));
+    } catch (e) {
+      emit(state.copyWith(status: MinuteStatus.errorOnSave));
+    }
   }
 
   _removeItem(RemoveItemEvent event, Emitter emit) {
@@ -80,8 +79,8 @@ class MinuteBloc extends Bloc<MinuteEvent, MinuteState> {
       emit(state.copyWith(error: errorMessage, status: MinuteStatus.errorOnFetching));
       return;
     }
-    final mode = itemFromList.onSuccess((success) => success.status);
-    final items = await api.byName(event.id);
-    emit(state.copyWith(items: items, status: MinuteStatus.idle, mode: mode));
+    final minuteItem = itemFromList.onSuccess((success) => success)!;
+    final items = await api.byName(minuteItem.name);
+    emit(state.copyWith(items: items, status: MinuteStatus.idle, mode: minuteItem.status));
   }
 }

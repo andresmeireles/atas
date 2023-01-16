@@ -6,8 +6,8 @@
 * Visualize created minutes
 * Press to open created minute
 * add app icon
+* Save as draw
 
 ## TBD (TO BE DONE)
 * Update minute
-* Save as draw
 * Close after minute date

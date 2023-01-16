@@ -68,7 +68,12 @@ class NewMinute extends StatelessWidget {
               return IconButton(
                 onPressed: () async {
                   final bloc = context.read<MinuteBloc>();
-                  bloc.add(AddMinuteOnFirebaseEvent(editedBy: context.read<AppBloc>().state.user, schema: minute));
+                  final editedBy = context.read<AppBloc>().state.user;
+                  if (state.mode == MinuteMode.updating) {
+                    bloc.add(UpdateMinuteEvent());
+                    return;
+                  }
+                  bloc.add(AddMinuteOnFirebaseEvent(editedBy: editedBy, schema: minute));
                 },
                 icon: const Icon(Icons.check),
               );
