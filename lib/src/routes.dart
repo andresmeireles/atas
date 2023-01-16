@@ -9,9 +9,9 @@ final routes = GoRouter(
     GoRoute(path: '/new-minute', builder: (_, __) => const NewMinuteController()),
     GoRoute(path: '/add-code', builder: (_, __) => const AddSecurityCodeController()),
     GoRoute(
-      path: '/minute/:minute',
+      path: '/minute/:id',
       name: 'edit_minute',
-      builder: (_, state) => NewMinuteController.editing(state.params['minute']!),
+      builder: (_, state) => NewMinuteController.editing(state.params['id']!),
     ),
   ],
 );

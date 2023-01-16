@@ -1,11 +1,13 @@
 import 'package:atas/src/core/firebase/minute_list.dart' as firebase_minute_list;
 import 'package:atas/src/core/firebase/minutes.dart' as firebase_minute;
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../minute.dart';
 
 part 'minute_event.dart';
+part 'minute_mode.dart';
 part 'minute_state.dart';
 part 'minute_status.dart';
 
@@ -23,10 +25,10 @@ class MinuteBloc extends Bloc<MinuteEvent, MinuteState> {
     on<AddMinuteItemEvent>(_addMinuteItem);
     on<AddMinuteOnFirebaseEvent>(_addMinuteOnFirebase);
     on<RemoveItemEvent>(_removeItem);
-    on<GetExistingMinuteEvent>(_getMinutes);
+    on<GetExistingMinuteEvent>(_getMinute);
   }
 
-  void _addMinuteItem(AddMinuteItemEvent event, Emitter emit) {
+  _addMinuteItem(AddMinuteItemEvent event, Emitter emit) {
     final item = event.item;
     final currentItems = state.items;
     final isRepeatable = repeatableLabels.contains(item.label);
@@ -51,7 +53,7 @@ class MinuteBloc extends Bloc<MinuteEvent, MinuteState> {
       (success) async {
         final minuteName =
             await firebaseMinute.add(minuteItems: items, type: MinuteTypes.sacramental, editedBy: submitter);
-        final minuteList = MinuteList(name: minuteName, status: MinuteListStatus.closed);
+        final minuteList = MinuteList(name: minuteName, status: state.mode);
         await firebaseMinuteList.add(minuteList);
         return MinuteStatus.saved;
       },
@@ -60,7 +62,7 @@ class MinuteBloc extends Bloc<MinuteEvent, MinuteState> {
     emit(state.copyWith(status: status));
   }
 
-  void _removeItem(RemoveItemEvent event, Emitter emit) {
+  _removeItem(RemoveItemEvent event, Emitter emit) {
     final item = event.item;
     final currentItems = state.items;
     emit(state.copyWith(status: MinuteStatus.running));
@@ -68,10 +70,18 @@ class MinuteBloc extends Bloc<MinuteEvent, MinuteState> {
     emit(state.copyWith(items: [...currentItems], status: MinuteStatus.idle));
   }
 
-  void _getMinutes(GetExistingMinuteEvent event, Emitter emit) async {
+  _getMinute(GetExistingMinuteEvent event, Emitter emit) async {
+    final minutesList = firebase_minute_list.MinuteList();
     final api = firebase_minute.Minutes();
     emit(state.copyWith(status: MinuteStatus.fetching));
-    final items = await api.byName(event.name);
-    emit(state.copyWith(items: items, status: MinuteStatus.idle));
+    final itemFromList = await minutesList.minuteById(event.id);
+    if (itemFromList.isError()) {
+      final errorMessage = itemFromList.onError((error) => error);
+      emit(state.copyWith(error: errorMessage, status: MinuteStatus.errorOnFetching));
+      return;
+    }
+    final mode = itemFromList.onSuccess((success) => success.status);
+    final items = await api.byName(event.id);
+    emit(state.copyWith(items: items, status: MinuteStatus.idle, mode: mode));
   }
 }

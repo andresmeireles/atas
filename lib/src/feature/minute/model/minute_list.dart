@@ -1,9 +1,10 @@
 import 'dart:convert';
 
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import '../minute.dart';
+
 class MinuteList {
   final String name;
-  final MinuteListStatus status;
+  final MinuteMode status;
 
   MinuteList({required this.name, required this.status});
 
@@ -12,7 +13,7 @@ class MinuteList {
   factory MinuteList.fromMap(Map<String, dynamic> map) {
     return MinuteList(
       name: map['name'] as String,
-      status: MinuteListStatus.values.firstWhere((element) => element.toString() == (map['status'])),
+      status: MinuteMode.values.firstWhere((element) => element.toString() == (map['status'])),
     );
   }
 
@@ -21,15 +22,12 @@ class MinuteList {
   factory MinuteList.fromJson(String source) => MinuteList.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
-enum MinuteListStatus { draw, closed }
+class MinuteListAggregator {
+  final String id;
+  final MinuteList minute;
 
-extension Names on MinuteListStatus {
-  String get statusName {
-    switch (this) {
-      case MinuteListStatus.draw:
-        return 'rascunho';
-      case MinuteListStatus.closed:
-        return 'finalizado';
-    }
-  }
+  MinuteListAggregator({
+    required this.id,
+    required this.minute,
+  });
 }

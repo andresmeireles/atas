@@ -12,14 +12,15 @@ class NewMinute extends StatelessWidget {
     final minute = Sacramental();
     final state = context.select<MinuteBloc, MinuteState>((MinuteBloc bloc) => bloc.state);
     if (state.status == MinuteStatus.fetching) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('nova ata'),
+        title: BlocSelector<MinuteBloc, MinuteState, MinuteMode>(
+          selector: (state) => state.mode,
+          builder: (context, state) => Column(children: [const Text('nova ata'), Text(state.name)]),
+        ),
         actions: [
           BlocBuilder<MinuteBloc, MinuteState>(
             builder: (_, state) {

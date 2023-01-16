@@ -5,5 +5,9 @@
 ## 0.1.0
 * Visualize created minutes
 * Press to open created minute
-* Update minute (TBD)
-* Save as draw (TBD)
+* add app icon
+
+## TBD (TO BE DONE)
+* Update minute
+* Save as draw
+* Close after minute date

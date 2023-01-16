@@ -5,7 +5,7 @@ import 'package:multiple_result/multiple_result.dart';
 class GetMinute {
   final _api = MinuteList();
 
-  Future<Result<List<app_minute_list.MinuteList>, String>> get minutes async {
+  Future<Result<List<app_minute_list.MinuteListAggregator>, String>> get minutes async {
     final minutes = await _api.minutes;
     return minutes.when((success) => Success(success), (error) => Error(error));
   }

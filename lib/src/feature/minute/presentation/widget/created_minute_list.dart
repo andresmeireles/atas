@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class CreatedMinuteList extends StatelessWidget {
-  final List<MinuteList> minutes;
+  final List<MinuteListAggregator> minutes;
 
   const CreatedMinuteList(this.minutes, {super.key});
 
@@ -14,15 +14,17 @@ class CreatedMinuteList extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListView(
-        children: minutes.map((e) => _tile(context, minute: e, size: size * 0.09)).toList(),
+        children: minutes.map((e) => _tile(context, minuteAggregator: e, size: size * 0.09)).toList(),
       ),
     );
   }
 
-  Widget _tile(BuildContext context, {required MinuteList minute, required double size}) {
+  Widget _tile(BuildContext context, {required MinuteListAggregator minuteAggregator, required double size}) {
+    final id = minuteAggregator.id;
+    final minute = minuteAggregator.minute;
     return GestureDetector(
       onTap: () {
-        GoRouter.of(context).pushNamed('edit_minute', params: {'minute': minute.name});
+        GoRouter.of(context).pushNamed('edit_minute', params: {'id': id});
       },
       child: ListTile(
         title: Text(_title(minute.name), style: TextStyle(fontSize: size)),
@@ -30,7 +32,7 @@ class CreatedMinuteList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(_date(minute.name), style: TextStyle(fontSize: size / 2)),
-            Text(minute.status.statusName, style: TextStyle(fontSize: size / 2)),
+            Text(minute.status.name, style: TextStyle(fontSize: size / 2)),
           ],
         ),
       ),
