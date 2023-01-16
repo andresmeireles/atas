@@ -2,7 +2,7 @@
 
 # version notes
 
-## 0.1.0
+## 0.1.1
 * Visualize created minutes
 * Press to open created minute
 * add app icon
