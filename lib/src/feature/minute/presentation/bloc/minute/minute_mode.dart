@@ -1,6 +1,6 @@
 part of 'minute_bloc.dart';
 
-enum MinuteMode { draw, updating, ready, closed }
+enum MinuteMode { creating, draw, updating, ready, closed }
 
 extension Names on MinuteMode {
   String get label => describeEnum(this);
@@ -15,6 +15,8 @@ extension Names on MinuteMode {
         return 'pronto';
       case MinuteMode.updating:
         return 'atualizando';
+      case MinuteMode.creating:
+        return 'criando';
     }
   }
 }

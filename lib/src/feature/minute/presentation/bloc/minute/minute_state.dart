@@ -28,5 +28,10 @@ class MinuteState extends Equatable {
 }
 
 class MinuteInitial extends MinuteState {
-  const MinuteInitial(List<MinuteItem> items) : super(items: items, mode: MinuteMode.draw, status: MinuteStatus.idle);
+  const MinuteInitial(List<MinuteItem> items)
+      : super(
+          items: items,
+          mode: MinuteMode.creating,
+          status: MinuteStatus.idle,
+        );
 }

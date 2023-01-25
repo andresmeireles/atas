@@ -34,8 +34,7 @@ class GetExistingMinuteEvent extends MinuteEvent {
 class AddMinuteOnFirebaseEvent extends MinuteEvent {
   final String editedBy;
   final SchemaInterface schema;
+  final bool isUpdate;
 
-  const AddMinuteOnFirebaseEvent({required this.editedBy, required this.schema});
+  const AddMinuteOnFirebaseEvent({required this.editedBy, required this.schema, this.isUpdate = false});
 }
-
-class UpdateMinuteEvent extends MinuteEvent {}

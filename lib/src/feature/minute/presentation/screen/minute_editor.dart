@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class NewMinute extends StatelessWidget {
-  const NewMinute({super.key});
+class MinuteEditor extends StatelessWidget {
+  const MinuteEditor({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +22,7 @@ class NewMinute extends StatelessWidget {
           builder: (context, state) => Column(children: [const Text('nova ata'), Text(state.name)]),
         ),
         actions: [
+          ToAdd(minute),
           BlocBuilder<MinuteBloc, MinuteState>(
             builder: (_, state) {
               return IconButton(
@@ -53,15 +54,26 @@ class NewMinute extends StatelessWidget {
             },
           ),
           BlocConsumer<MinuteBloc, MinuteState>(
-            listener: (context, state) {
+            listener: (context, state) async {
               final status = state.status;
+              final router = GoRouter.of(context);
               if (status == MinuteStatus.errorOnSave) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('erro ao salvar ata')));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.error ?? 'erro ao salvar ata')),
+                );
                 return;
               }
               if (status == MinuteStatus.saved) {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Ata salva com sucesso!')));
-                GoRouter.of(context).go('/home');
+                router.push('/home');
+                return;
+              }
+              if (status == MinuteStatus.updated) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Ata atualizada com sucesso!')),
+                );
+                router.push('/home');
+                return;
               }
             },
             builder: (context, state) {
@@ -69,11 +81,8 @@ class NewMinute extends StatelessWidget {
                 onPressed: () async {
                   final bloc = context.read<MinuteBloc>();
                   final editedBy = context.read<AppBloc>().state.user;
-                  if (state.mode == MinuteMode.updating) {
-                    bloc.add(UpdateMinuteEvent());
-                    return;
-                  }
-                  bloc.add(AddMinuteOnFirebaseEvent(editedBy: editedBy, schema: minute));
+                  final isUpdate = state.mode == MinuteMode.updating || state.mode == MinuteMode.draw;
+                  bloc.add(AddMinuteOnFirebaseEvent(editedBy: editedBy, schema: minute, isUpdate: isUpdate));
                 },
                 icon: const Icon(Icons.check),
               );
@@ -81,19 +90,32 @@ class NewMinute extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: BlocBuilder<MinuteBloc, MinuteState>(
-          builder: (context, state) {
-            final addedItems = state.items;
-            return Column(
-              children: minute.items.map((item) {
-                final items = addedItems.where((element) => element.label == item.label).toList();
-                if (items.isEmpty) return Container();
-                return MinuteTile(label: item.label, type: item.type, items: items, fixed: item.fixed);
-              }).toList(),
-            );
-          },
-        ),
+      body: state.status == MinuteStatus.saving ? _saving() : _editor(context, minute),
+    );
+  }
+
+  Widget _saving() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [CircularProgressIndicator(), SizedBox(height: 20), Text('Salvando')],
+      ),
+    );
+  }
+
+  Widget _editor(BuildContext context, SchemaInterface minute) {
+    return SingleChildScrollView(
+      child: BlocBuilder<MinuteBloc, MinuteState>(
+        builder: (context, state) {
+          final addedItems = state.items;
+          return Column(
+            children: minute.items.map((item) {
+              final items = addedItems.where((element) => element.label == item.label).toList();
+              if (items.isEmpty) return Container();
+              return MinuteTile(label: item.label, type: item.type, items: items, fixed: item.fixed);
+            }).toList(),
+          );
+        },
       ),
     );
   }

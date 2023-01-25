@@ -23,9 +23,7 @@ class NewMinuteController extends StatelessWidget {
 
   Widget _editing(BuildContext context) {
     return BlocBuilder<AppBloc, AppState>(
-      builder: (_, state) {
-        return BlocProvider(create: (_) => MinuteBloc([]), child: EditMinute(editingMinuteId!));
-      },
+      builder: (_, state) => BlocProvider(create: (_) => MinuteBloc([]), child: EditMinute(editingMinuteId!)),
     );
   }
 
@@ -37,7 +35,7 @@ class NewMinuteController extends StatelessWidget {
           SimpleText(value: DateTime.now().toString(), label: MinuteLabel.createdAt, type: MinuteItemType.date),
           SimpleText(value: DateTime.now().toString(), label: MinuteLabel.meetingDate, type: MinuteItemType.date),
         ];
-        return BlocProvider(create: (_) => MinuteBloc(items), child: const NewMinute());
+        return BlocProvider(create: (_) => MinuteBloc(items), child: const MinuteEditor());
       },
     );
   }

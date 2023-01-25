@@ -1,3 +1,4 @@
+import 'package:atas/environment.dart';
 import 'package:atas/src/feature/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -8,10 +9,11 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final devMode = Environment.isDevMode;
     return SafeArea(
       child: Scaffold(
         drawer: const HomeDrawer(),
-        appBar: AppBar(title: const Text('atas')),
+        appBar: AppBar(title: devMode ? const Text('atas [DEV]') : const Text('atas')),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

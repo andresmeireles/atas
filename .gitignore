@@ -52,3 +52,7 @@ ios/Runner/GoogleService-Info.plist
 android/app/google-services.json
 /android/app/google-services.json
 /android/key.properties
+
+# env
+.env.prod
+.env.dev

@@ -11,6 +11,6 @@ class EditMinute extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = context.read<MinuteBloc>();
     bloc.add(GetExistingMinuteEvent(id: editingMinuteId));
-    return const NewMinute();
+    return const MinuteEditor();
   }
 }
