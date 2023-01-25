@@ -8,6 +8,10 @@
 * add app icon
 * Save as draw
 
-## TBD (TO BE DONE)
+## 0.2.1
 * Update minute
+* Icon to check missing labels
+
+## TBD (TO BE DONE)
+* Add testimony schema
 * Close after minute date
