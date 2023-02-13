@@ -3,7 +3,7 @@ description: Um aplicativo de atas
 
 publish_to: 'none'
 
-version: 0.2.1+3
+version: 0.3.2+4
 
 environment:
   sdk: '>=2.18.2 <3.0.0'
