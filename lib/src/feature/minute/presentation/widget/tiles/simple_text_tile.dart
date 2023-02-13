@@ -10,17 +10,21 @@ class SimpleTextTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: LabelText(simpleText.label),
-      subtitle: Text(simpleText.value),
-      trailing: fixed
-          ? const SizedBox()
-          : IconButton(
-              onPressed: () {
-                context.read<MinuteBloc>().add(RemoveItemEvent(simpleText));
-              },
-              icon: const Icon(Icons.close),
-            ),
+    return Column(
+      children: [
+        LabelText(simpleText.label),
+        ListTile(
+          title: Text(simpleText.value),
+          trailing: fixed
+              ? const SizedBox()
+              : IconButton(
+                  onPressed: () {
+                    context.read<MinuteBloc>().add(RemoveItemEvent(simpleText));
+                  },
+                  icon: const Icon(Icons.close),
+                ),
+        ),
+      ],
     );
   }
 }

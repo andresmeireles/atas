@@ -9,21 +9,20 @@ class HeadingPresidingTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: LabelText(headingPresiding.label),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(headingPresiding.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text(headingPresiding.call),
-        ],
-      ),
-      trailing: IconButton(
-        onPressed: () {
-          context.read<MinuteBloc>().add(RemoveItemEvent(headingPresiding));
-        },
-        icon: const Icon(Icons.close),
-      ),
+    return Column(
+      children: [
+        LabelText(headingPresiding.label),
+        ListTile(
+          title: Text(headingPresiding.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+          subtitle: Text(headingPresiding.call),
+          trailing: IconButton(
+            onPressed: () {
+              context.read<MinuteBloc>().add(RemoveItemEvent(headingPresiding));
+            },
+            icon: const Icon(Icons.close),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../../minute.dart';
 
@@ -43,7 +44,7 @@ class AnnouncementsTile extends StatelessWidget {
 
   String _formatDate(DateTime date) => '${date.day}/${date.month}/${date.year}';
 
-  String _formatHour(DateTime date) => '${date.hour}:${date.minute}';
+  String _formatHour(DateTime date) => DateFormat('hh:mm').format(date);
 
   Widget _listItem(String label, String content) => Row(children: [Text('$label:  '), Text(content)]);
 }

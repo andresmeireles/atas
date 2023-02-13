@@ -39,7 +39,6 @@ class MinuteList extends Core {
 
   Future<Result<List<app_minute_list.MinuteListAggregator>, String>> get minutes async {
     try {
-      final collection = db.collection('minute_list');
       final minutes = await collection.get();
       final minuteNames = minutes.docs
           .map(
@@ -54,7 +53,6 @@ class MinuteList extends Core {
 
   Future<Result<app_minute_list.MinuteList, String>> minuteById(String id) async {
     try {
-      final collection = db.collection('minute_list');
       final minutes = await collection.doc(id).get();
       final item = app_minute_list.MinuteList.fromMap(minutes.data()!);
       return Success(item);

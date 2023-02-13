@@ -1,6 +1,7 @@
 import 'package:atas/src/feature/minute/minute.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/core.dart';
 
@@ -32,8 +33,16 @@ class NewMinuteController extends StatelessWidget {
       builder: (_, state) {
         final items = [
           SimpleText(value: state.user, label: MinuteLabel.createdBy, type: MinuteItemType.text),
-          SimpleText(value: DateTime.now().toString(), label: MinuteLabel.createdAt, type: MinuteItemType.date),
-          SimpleText(value: DateTime.now().toString(), label: MinuteLabel.meetingDate, type: MinuteItemType.date),
+          SimpleText(
+            value: DateFormat('dd/MM/yyyyy hh:mm').format(DateTime.now()),
+            label: MinuteLabel.createdAt,
+            type: MinuteItemType.date,
+          ),
+          SimpleText(
+            value: DateFormat('dd/MM/yyyyy hh:mm').format(DateTime.now()),
+            label: MinuteLabel.meetingDate,
+            type: MinuteItemType.date,
+          ),
         ];
         return BlocProvider(create: (_) => MinuteBloc(items), child: const MinuteEditor());
       },

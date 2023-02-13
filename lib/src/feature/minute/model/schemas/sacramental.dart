@@ -26,6 +26,7 @@ class Sacramental extends SchemaInterface {
     SchemaItem.speaker(speaker: Speaker.second, order: 80),
     SchemaItem.hym(hymn: Hymns.intermediary, order: 90),
     SchemaItem.speaker(speaker: Speaker.last, order: 100),
+    SchemaItem.hym(hymn: Hymns.last, order: 90),
     SchemaItem.pray(pray: Prays.last, order: 110),
   ];
 
