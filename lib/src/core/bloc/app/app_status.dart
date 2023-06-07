@@ -1,3 +1,3 @@
 part of 'app_bloc.dart';
 
-enum AppStatus { ok, checking, noCode, wrongCode, noUser, error }
+enum AppStatus { booting, booted, failLogin, loggedOut }

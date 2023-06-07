@@ -1,29 +1,19 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'app_bloc.dart';
 
-abstract class AppEvent extends Equatable {
+abstract class AppEvent {
   const AppEvent();
-
-  @override
-  List<Object> get props => [];
 }
 
-class FetUserEvent extends AppEvent {}
+class BootAppEvent implements AppEvent {}
 
-class AddUserEvent extends AppEvent {
-  final String? user;
+class AppLoginEvent implements AppEvent {
+  final String username;
+  final String password;
 
-  const AddUserEvent(this.user);
+  AppLoginEvent({required this.username, required this.password});
 }
 
-class ClearUserEvent extends AppEvent {
-  const ClearUserEvent();
-}
+class AppLogoutEvent implements AppEvent {}
 
-class FetchSecureCodeEvent extends AppEvent {}
-
-class AddCodeEvent extends AppEvent {
-  final int? code;
-
-  const AddCodeEvent(this.code);
-}
+class ToBootedEvent implements AppEvent {}

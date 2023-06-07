@@ -1,2 +1,1 @@
-export './new_minute_controller.dart';
-export 'created_minutes_controller.dart';
+export 'minute_list_controller.dart';

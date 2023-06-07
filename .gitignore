@@ -56,3 +56,4 @@ android/app/google-services.json
 # env
 .env.prod
 .env.dev
+lib/env.dart

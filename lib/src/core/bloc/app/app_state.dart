@@ -2,20 +2,21 @@
 part of 'app_bloc.dart';
 
 class AppState extends Equatable {
-  final String user;
-  final int code;
+  final String token;
   final AppStatus status;
 
-  const AppState({required this.user, required this.code, required this.status});
+  const AppState({required this.token, required this.status});
+
+  bool isLogged() => token.isNotEmpty;
 
   @override
-  List<Object> get props => [user, code, status];
+  List<Object> get props => [token, status];
 
-  AppState copyWith({String? user, int? code, AppStatus? status}) {
-    return AppState(user: user ?? this.user, code: code ?? this.code, status: status ?? this.status);
+  AppState copyWith({String? token, AppStatus? status}) {
+    return AppState(token: token ?? this.token, status: status ?? this.status);
   }
 }
 
 class AppInitial extends AppState {
-  const AppInitial() : super(user: '', code: 0, status: AppStatus.checking);
+  const AppInitial() : super(token: '', status: AppStatus.booting);
 }
