@@ -12,7 +12,7 @@ final class SacramentalShape implements MinuteShape {
     Label.endingHym,
     Label.presiding,
     Label.firstSpeaker,
-    Label.secondSpeaker,
+    Label.thirdSpeaker,
   ];
 
   @override
@@ -23,7 +23,7 @@ final class SacramentalShape implements MinuteShape {
     Label.callRelease,
     Label.confirmation,
     Label.intermediaryHym,
-    Label.thirdSpeaker,
+    Label.secondSpeaker,
     Label.presentingChild,
     Label.announcement
   ];

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:atas/src/core/core.dart';
 import 'package:atas/src/feature/auth/auth.dart';
 import 'package:bloc/bloc.dart';
@@ -15,6 +17,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<AppLoginEvent>(_login);
     on<AppLogoutEvent>(_logout);
     on<ToBootedEvent>(_toBoot);
+    on<CheckLoginEvent>(_check);
   }
 
   _boot(BootAppEvent event, Emitter emit) async {
@@ -45,5 +48,17 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
   _toBoot(ToBootedEvent event, Emitter emit) {
     emit(state.copyWith(status: AppStatus.booted));
+  }
+
+  _check(CheckLoginEvent event, Emitter emit) async {
+    try {
+      final user = await authApi.check();
+      if (user.isError()) {
+        emit(state.copyWith(token: '', status: AppStatus.loggedOut));
+      }
+    } catch (e) {
+      log(e.toString());
+      emit(state.copyWith(token: '', status: AppStatus.loggedOut));
+    }
   }
 }

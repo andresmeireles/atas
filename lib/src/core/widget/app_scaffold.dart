@@ -12,13 +12,16 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AppBloc, AppState>(
+    return BlocConsumer<AppBloc, AppState>(
       listener: (context, state) {
         if (state.status == AppStatus.loggedOut) {
           context.go('/login');
         }
       },
-      child: _scaffold,
+      builder: (context, state) {
+        context.read<AppBloc>().add(CheckLoginEvent());
+        return _scaffold;
+      },
     );
   }
 

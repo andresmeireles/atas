@@ -7,9 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:multiple_result/multiple_result.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-abstract class CoreHttp {
-  const CoreHttp();
-
+mixin CoreHttp {
   Future<Map<String, String>> _headers() async {
     final token = await getToken();
     final pkgInfo = await PackageInfo.fromPlatform();
@@ -21,20 +19,34 @@ abstract class CoreHttp {
     };
   }
 
-  @protected
-  Future<Result<String, FailResponse>> postRequest<T>(String path, Object body) async {
+  Uri _url(String path) {
     final urlPath = '$api/$path';
-    final url = Uri.http(appPath, urlPath);
+    return Uri.http(appPath, urlPath);
+  }
+
+  @protected
+  Future<Result<String, FailResponse>> postRequest(String path, Object body) async {
+    final url = _url(path);
     final jsonBody = jsonEncode(body);
     final request = http.post(url, body: jsonBody, headers: await _headers());
     final response = await request;
     if (response.statusCode > 399) {
       return Error(FailResponse.fromJson(response.body));
     }
+
     return Success(response.body);
   }
 
-  // Future<T> getRequest<T>() async {}
+  Future<Result<String, FailResponse>> getRequest(String path) async {
+    final url = _url(path);
+    final request = http.get(url, headers: await _headers());
+    final response = await request;
+    if (response.statusCode > 399) {
+      return Error(FailResponse.fromJson(response.body));
+    }
+
+    return Success(response.body);
+  }
 
   // Future<T> put<T>() async {}
 }

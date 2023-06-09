@@ -4,4 +4,6 @@ abstract class Assign {
   String toJson();
 
   Label get label;
+
+  Types get type;
 }

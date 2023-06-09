@@ -4,6 +4,8 @@ import 'package:atas/src/feature/home/home.dart';
 import 'package:atas/src/feature/minute/minute.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 
 class App extends StatelessWidget {
@@ -27,24 +29,24 @@ final _routes = GoRouter(
 class _App extends StatelessWidget {
   const _App();
 
-  // final _routes = GoRouter(
-  //   routes: [
-  //     GoRoute(name: '/', path: '/', builder: (_, __) => const HomeController()),
-  //     GoRoute(name: '/login', path: '/login', builder: (_, __) => const AuthController()),
-  //     GoRoute(name: '/minutes', path: '/minutes', builder: (_, __) => const MinuteListController()),
-  //   ],
-  // );
-
   @override
   Widget build(BuildContext context) {
-    // return MaterialApp.router(
-    //   routeInformationParser: _routes.routeInformationParser,
-    //   routeInformationProvider: _routes.routeInformationProvider,
-    //   routerDelegate: _routes.routerDelegate,
-    //   backButtonDispatcher: RootBackButtonDispatcher(),
-    //   title: 'Atas',
-    // );
+    final localizationDelegate = LocalizedApp.of(context).delegate;
 
-    return MaterialApp.router(routerConfig: _routes, title: 'Atas');
+    return LocalizationProvider(
+      state: LocalizationProvider.of(context).state,
+      child: MaterialApp.router(
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          localizationDelegate
+        ],
+        supportedLocales: localizationDelegate.supportedLocales,
+        locale: localizationDelegate.currentLocale,
+        title: 'Atas',
+        routerConfig: _routes,
+      ),
+    );
   }
 }

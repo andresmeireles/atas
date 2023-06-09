@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'app_bloc.dart';
 
 abstract class AppEvent {
@@ -17,3 +16,5 @@ class AppLoginEvent implements AppEvent {
 class AppLogoutEvent implements AppEvent {}
 
 class ToBootedEvent implements AppEvent {}
+
+class CheckLoginEvent implements AppEvent {}
