@@ -13,19 +13,21 @@ const repeatable = [
 
 class OptionDeciderDialog extends StatelessWidget {
   final List<Label> labels;
+  final MinuteShape shape;
 
-  const OptionDeciderDialog(this.labels, {super.key});
+  const OptionDeciderDialog({required this.shape, required this.labels, super.key});
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final labels = [...shape.obligatory, ...shape.optional];
 
     return AlertDialog(
       title: const Text('adicionar novo'),
       content: SizedBox(
         width: width * 0.7,
         height: double.infinity,
-        child: ListView(children: Label.values.map((label) => _item(context, label)).toList()),
+        child: ListView(children: labels.map((label) => _item(context, label)).toList()),
       ),
       actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('fechar'))],
     );

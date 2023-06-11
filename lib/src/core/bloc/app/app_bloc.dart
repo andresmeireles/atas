@@ -12,7 +12,7 @@ part 'app_status.dart';
 class AppBloc extends Bloc<AppEvent, AppState> {
   final Auth authApi;
 
-  AppBloc(this.authApi) : super(const AppInitial()) {
+  AppBloc(this.authApi) : super(AppInitial()) {
     on<BootAppEvent>(_boot);
     on<AppLoginEvent>(_login);
     on<AppLogoutEvent>(_logout);
@@ -31,12 +31,19 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
   _login(AppLoginEvent event, Emitter emit) async {
     final response = await authApi.login(event.username, event.password);
-    if (response.isSuccess()) {
-      final success = response.tryGetSuccess()!;
-      await setToken(success.token);
-      emit(state.copyWith(token: success.token, status: AppStatus.booted));
-    }
-    if (response.isError()) {
+    try {
+      if (response.isSuccess()) {
+        final success = response.tryGetSuccess()!;
+        final token = success.token.substring(success.token.indexOf('|') + 1, success.token.length);
+        await setToken(token);
+        final user = await authApi.check();
+        if (user.isSuccess()) {
+          emit(state.copyWith(user: user.tryGetSuccess(), token: token, status: AppStatus.booted));
+          return;
+        }
+      }
+      throw 'error on login';
+    } catch (e) {
       emit(state.copyWith(token: '', status: AppStatus.failLogin));
     }
   }

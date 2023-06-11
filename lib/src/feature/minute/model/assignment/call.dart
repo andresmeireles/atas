@@ -5,6 +5,7 @@ import 'package:atas/src/feature/minute/minute.dart';
 final class Call implements Assign {
   @override
   final Label label;
+  @override
   final Types type;
   final String name;
   final String call;
@@ -14,5 +15,6 @@ final class Call implements Assign {
   @override
   String toJson() => jsonEncode(toMap());
 
+  @override
   Map<String, dynamic> toMap() => {'label': label.value, 'type': type.value, 'name': name, 'call': call};
 }

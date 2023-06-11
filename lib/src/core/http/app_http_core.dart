@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:atas/env.dart';
 import 'package:atas/src/core/core.dart';
 import 'package:flutter/foundation.dart';
@@ -7,15 +5,15 @@ import 'package:http/http.dart' as http;
 import 'package:multiple_result/multiple_result.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-mixin CoreHttp {
+mixin AppHttpCore {
   Future<Map<String, String>> _headers() async {
     final token = await getToken();
     final pkgInfo = await PackageInfo.fromPlatform();
     return {
       'Authorization': 'Bearer $token',
-      'App-version': pkgInfo.version,
       'Accept': 'application/json',
-      'Content-type': 'application/json',
+      'Content-Type': 'application/json',
+      'App-version': pkgInfo.version,
     };
   }
 
@@ -25,10 +23,9 @@ mixin CoreHttp {
   }
 
   @protected
-  Future<Result<String, FailResponse>> postRequest(String path, Object body) async {
+  Future<Result<String, FailResponse>> postRequest(String path, Submittable body) async {
     final url = _url(path);
-    final jsonBody = jsonEncode(body);
-    final request = http.post(url, body: jsonBody, headers: await _headers());
+    final request = http.post(url, body: body.toJson(), headers: await _headers());
     final response = await request;
     if (response.statusCode > 399) {
       return Error(FailResponse.fromJson(response.body));
@@ -48,5 +45,15 @@ mixin CoreHttp {
     return Success(response.body);
   }
 
-  // Future<T> put<T>() async {}
+  @protected
+  Future<Result<String, FailResponse>> putRequest(String path, Submittable body) async {
+    final url = _url(path);
+    final request = http.put(url, body: body.toJson(), headers: await _headers());
+    final response = await request;
+    if (response.statusCode > 399) {
+      return Error(FailResponse.fromJson(response.body));
+    }
+
+    return Success(response.body);
+  }
 }

@@ -1,7 +1,18 @@
-enum Schema {
-  sacramental(1);
+import 'package:atas/src/feature/minute/minute.dart';
 
-  final int value;
+enum Schema {
+  sacramental('sacramental');
+
+  final String value;
 
   const Schema(this.value);
+
+  MinuteShape get shape {
+    switch (value) {
+      case 'sacramental':
+        return SacramentalShape();
+      default:
+        return SacramentalShape();
+    }
+  }
 }

@@ -13,5 +13,8 @@ final class Hym implements Assign {
   Hym({required this.label, required this.name, required this.number}) : type = Types.hym;
 
   @override
-  String toJson() => jsonEncode({'type': type.value, 'number': number.toString(), 'name': name, 'label': label.value});
+  String toJson() => jsonEncode(toMap());
+
+  @override
+  toMap() => {'type': type.value, 'number': number.toString(), 'name': name, 'label': label.value};
 }

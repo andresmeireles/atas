@@ -19,10 +19,23 @@ class App extends StatelessWidget {
 
 final _routes = GoRouter(
   routes: [
-    GoRoute(name: 'home', path: '/', builder: (_, __) => const HomeController()),
-    GoRoute(name: 'login', path: '/login', builder: (_, __) => const AuthController()),
-    GoRoute(name: 'minutes.add', path: '/minutes/add', builder: (_, __) => const AddMinuteController()),
-    GoRoute(name: 'minutes', path: '/minutes', builder: (_, __) => const MinuteListController()),
+    GoRoute(name: HomeController.name, path: HomeController.path, builder: (_, __) => const HomeController()),
+    GoRoute(name: AuthController.name, path: AuthController.path, builder: (_, __) => const AuthController()),
+    GoRoute(
+      name: AddMinuteController.name,
+      path: AddMinuteController.path,
+      builder: (_, __) => const AddMinuteController(),
+    ),
+    GoRoute(
+      name: MinuteListController.name,
+      path: MinuteListController.path,
+      builder: (_, __) => const MinuteListController(),
+    ),
+    GoRoute(
+      name: EditMinuteController.name,
+      path: '${EditMinuteController.path}/:id',
+      builder: (_, state) => EditMinuteController(minuteId: int.parse(state.pathParameters['id'].toString())),
+    ),
   ],
 );
 

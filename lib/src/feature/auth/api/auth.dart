@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:atas/src/feature/auth/auth.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 import 'package:atas/src/core/core.dart';
@@ -20,20 +21,20 @@ class LoginResponse {
   factory LoginResponse.fromJson(String source) => LoginResponse.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
-final class Auth with CoreHttp {
+final class Auth with AppHttpCore {
   Future<Result<LoginResponse, FailResponse>> login(String username, String password) async {
-    final request = await postRequest('v1/login', {'username': username, 'password': password});
+    final request = await postRequest('v1/login', Login(username: username, password: password));
     return request.when(
       (success) => Success(LoginResponse.fromJson(success)),
       (error) => Error(error),
     );
   }
 
-  Future<Result<bool, bool>> check() async {
+  Future<Result<User, bool>> check() async {
     try {
-      final request = await getRequest('v1/user');
+      final request = await getRequest('v1/me');
       return request.when(
-        (success) => const Success(true),
+        (success) => Success(User.fromJson(success)),
         (error) => const Error(false),
       );
     } catch (e) {

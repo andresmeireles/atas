@@ -7,6 +7,9 @@ import '../../../core/core.dart';
 
 // @RoutePage(name: 'home')
 class HomeController extends StatelessWidget {
+  static const name = 'home';
+  static const path = '/';
+
   const HomeController({super.key});
 
   @override
@@ -18,7 +21,7 @@ class HomeController extends StatelessWidget {
           return const Loading();
         }
         if (!state.isLogged()) {
-          return const Login();
+          return const LoginForm();
         }
         return const Home();
       },

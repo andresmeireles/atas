@@ -7,14 +7,14 @@ import 'package:go_router/go_router.dart';
 
 // TODO: fazer validação de dados
 // TODO: colocar inputs como cubit
-class Login extends StatefulWidget {
-  const Login({super.key});
+class LoginForm extends StatefulWidget {
+  const LoginForm({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<LoginForm> createState() => _LoginFormState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginFormState extends State<LoginForm> {
   final user = TextEditingController();
   final password = TextEditingController();
 

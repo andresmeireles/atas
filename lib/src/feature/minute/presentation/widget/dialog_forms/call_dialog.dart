@@ -28,7 +28,7 @@ class CallDialog extends StatelessWidget {
             ),
             TextField(
               controller: call,
-              decoration: const InputDecoration(label: Text('numero')),
+              decoration: const InputDecoration(label: Text('chamado')),
             ),
           ],
         ),

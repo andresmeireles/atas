@@ -1,6 +1,6 @@
 export 'bloc/bloc.dart';
 export 'storage/storage.dart';
-export 'http/http.dart';
+export 'http/_export.dart';
 export 'response/response.dart';
 export 'widget/widget.dart';
 export 'model/model.dart';

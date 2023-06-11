@@ -2,19 +2,24 @@ import 'dart:convert';
 
 import 'package:atas/src/feature/minute/minute.dart';
 
-final class AssignmentFactory {
+class AssignmentFactory {
   AssignmentFactory._();
 
-  Assign fromJson(String json) {
+  static Assign fromJson(String json) {
     final decoded = jsonDecode(json);
-    final type = Types.values[decoded['schema'] as int];
+    return fromJsonMap(decoded);
+  }
+
+  static Assign fromJsonMap(dynamic decoded) {
+    final type = Types.values.firstWhere((t) => t.value == decoded['type'].toString().toLowerCase());
+    final label = Label.values.firstWhere((l) => l.value == decoded['label'].toString().toLowerCase());
     switch (type) {
       case Types.call:
-        return Call(call: decoded['call'], label: Label.values[decoded['label']], name: decoded['label']);
+        return Call(call: decoded['call'], label: label, name: decoded['name']);
       case Types.hym:
-        return Hym(name: decoded['value'], number: decoded['number'], label: Label.values[decoded['label']]);
+        return Hym(name: decoded['name'], number: decoded['number'], label: label);
       case Types.simpleText:
-        return SimpleText(value: decoded['value'], label: Label.values[decoded['label']]);
+        return SimpleText(value: decoded['value'], label: label);
     }
   }
 }
