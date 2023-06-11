@@ -19,6 +19,9 @@ mixin AppHttpCore {
 
   Uri _url(String path) {
     final urlPath = '$api/$path';
+    if (kReleaseMode) {
+      return Uri.https(appPath, urlPath);
+    }
     return Uri.http(appPath, urlPath);
   }
 

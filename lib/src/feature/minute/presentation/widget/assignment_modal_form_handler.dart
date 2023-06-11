@@ -14,15 +14,15 @@ class AssignmentModalFormHandler extends StatelessWidget {
       case Label.sacramentalHym:
       case Label.intermediaryHym:
       case Label.endingHym:
-        return HymDialog(label);
+        return HymDialog(label: label);
       case Label.call:
       case Label.callRelease:
       case Label.presiding:
       case Label.driving:
       case Label.recognition:
-        return CallDialog(label);
+        return CallDialog(label: label);
       default:
-        return SimpleTextDialog(label);
+        return SimpleTextDialog(label: label);
     }
   }
 }

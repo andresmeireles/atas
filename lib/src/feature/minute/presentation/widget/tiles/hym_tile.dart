@@ -5,8 +5,9 @@ import 'package:flutter_translate/flutter_translate.dart';
 class HymTile extends StatelessWidget {
   final Assignment assignment;
   final Function(String) removeFunction;
+  final Function(Assignment, Assign) editFunction;
 
-  const HymTile({required this.assignment, required this.removeFunction, super.key});
+  const HymTile({required this.assignment, required this.removeFunction, required this.editFunction, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +20,20 @@ class HymTile extends StatelessWidget {
           Text(translate(hym.label.value), style: const TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),
+      onLongPress: () async {
+        final edit = await showDialog(
+          context: context,
+          builder: (context) => HymDialog(
+            label: hym.label,
+            name: hym.name,
+            number: hym.number,
+          ),
+        );
+        if (edit == null) return;
+        final (_, (name, number)) = edit;
+        final updatedAssign = Hym(name: name, label: hym.label, number: number);
+        editFunction(assignment, updatedAssign);
+      },
       title: Text(hym.name),
       subtitle: Text('N° ${hym.number}'),
       trailing: IconButton(

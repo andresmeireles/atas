@@ -4,13 +4,15 @@ import '../../../minute.dart';
 
 class HymDialog extends StatelessWidget {
   final Label label;
+  final String? name;
+  final int? number;
 
-  const HymDialog(this.label, {super.key});
+  const HymDialog({required this.label, this.name, this.number, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final name = TextEditingController();
-    final number = TextEditingController();
+    final name = TextEditingController(text: this.name);
+    final number = TextEditingController(text: this.number.toString());
 
     commit() {
       Navigator.of(context).pop((Types.hym, (name.text, int.tryParse(number.text) ?? 0)));

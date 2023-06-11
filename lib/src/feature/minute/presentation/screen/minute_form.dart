@@ -158,13 +158,23 @@ class _MinuteFormState extends State<MinuteForm> {
     final assigns = _assign
         .where((element) => element.assign.label == label)
         .map(
-          (e) => AssignTile(assignment: e, removeFunction: _removeAssign),
+          (e) => AssignTile(assignment: e, removeFunction: _removeAssign, editFunction: _editFunction),
         )
         .toList();
-    if (assigns.isEmpty) {
-      return [const SizedBox()];
-    }
+    if (assigns.isEmpty) return [const SizedBox()];
+
     return assigns;
+  }
+
+  _editFunction(Assignment assignment, Assign assign) {
+    print(_assign.length);
+    _assign.removeWhere((element) => element.hash == assignment.hash);
+    print(_assign.length);
+    final newAssignment = Assignment(hash: assignment.hash, assign: assign);
+    setState(() {
+      _assign.add(newAssignment);
+    });
+    print(_assign.length);
   }
 
   _showDialog(BuildContext context) async {

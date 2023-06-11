@@ -1,5 +1,3 @@
-import 'package:atas/src/feature/minute/api/send_minute.dart';
-import 'package:atas/src/feature/minute/minute.dart';
 import 'package:atas/src/feature/minute/presentation/screen/create_minute.dart';
 import 'package:flutter/material.dart';
 

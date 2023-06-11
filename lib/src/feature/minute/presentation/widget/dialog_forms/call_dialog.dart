@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 
 class CallDialog extends StatelessWidget {
   final Label label;
+  final String? name;
+  final String? call;
 
-  const CallDialog(this.label, {super.key});
+  const CallDialog({required this.label, this.name, this.call, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final name = TextEditingController();
-    final call = TextEditingController();
+    final name = TextEditingController(text: this.name);
+    final call = TextEditingController(text: this.call);
 
     commit() {
       Navigator.of(context).pop((Types.call, (name.text, call.text)));

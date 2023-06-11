@@ -3,24 +3,25 @@ import 'package:flutter/material.dart';
 
 class SimpleTextDialog extends StatelessWidget {
   final Label label;
+  final String? value;
 
-  SimpleTextDialog(this.label, {super.key});
-
-  final value = TextEditingController();
-
-  commit(BuildContext context) {
-    Navigator.of(context).pop((Types.simpleText, value.text));
-  }
+  const SimpleTextDialog({required this.label, this.value, super.key});
 
   @override
   Widget build(BuildContext context) {
+    final input = TextEditingController(text: value);
+
+    commit(BuildContext context) {
+      Navigator.of(context).pop((Types.simpleText, input.text));
+    }
+
     return DialogBase(
       label: label,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
-            controller: value,
+            controller: input,
             decoration: const InputDecoration(label: Text('valor')),
           )
         ],

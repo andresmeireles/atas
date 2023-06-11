@@ -5,19 +5,20 @@ import 'package:flutter/material.dart';
 class AssignTile extends StatelessWidget {
   final Assignment assignment;
   final Function(String) removeFunction;
+  final Function(Assignment, Assign) editFunction;
 
-  const AssignTile({required this.assignment, required this.removeFunction, super.key});
+  const AssignTile({required this.assignment, required this.removeFunction, required this.editFunction, super.key});
 
   @override
   Widget build(BuildContext context) {
     final type = assignment.assign.type;
     switch (type) {
       case Types.call:
-        return CallTile(assignment: assignment, removeFunction: removeFunction);
+        return CallTile(assignment: assignment, removeFunction: removeFunction, editFunction: editFunction);
       case Types.hym:
-        return HymTile(assignment: assignment, removeFunction: removeFunction);
+        return HymTile(assignment: assignment, removeFunction: removeFunction, editFunction: editFunction);
       case Types.simpleText:
-        return SimpleTextTile(assignment: assignment, removeFunction: removeFunction);
+        return SimpleTextTile(assignment: assignment, removeFunction: removeFunction, editFunction: editFunction);
     }
   }
 }
