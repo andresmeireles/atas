@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
+// loaders para quando o botao de salvar for pressionado
 class MinuteForm extends StatefulWidget {
   final Minutes minute;
   final MinuteSubmit api;
@@ -20,13 +21,15 @@ class MinuteForm extends StatefulWidget {
 }
 
 class _MinuteFormState extends State<MinuteForm> {
-  final List<Assignment> _assign = [];
+  final List<Assignment> minuteAssignments = [];
   DateTime _minuteDate = DateTime.now();
+  bool _submitting = false;
 
   @override
   void initState() {
     super.initState();
-    _assign.addAll(widget.minute.assignments.map((e) => Assignment(hash: const Uuid().v4(), assign: e)).toList());
+    minuteAssignments
+        .addAll(widget.minute.assignments.map((e) => Assignment(hash: const Uuid().v4(), assign: e)).toList());
     _minuteDate = widget.minute.date;
   }
 
@@ -46,82 +49,89 @@ class _MinuteFormState extends State<MinuteForm> {
             ],
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              await _showDialog(context);
-            },
-            icon: const Icon(Icons.add),
-          ),
-          IconButton(
-            onPressed: () async {
-              final minute = Minutes(
-                id: widget.minute.id,
-                user: widget.minute.user,
-                assignments: _assign.map((a) => a.assign).toList(),
-                date: _minuteDate,
-                schema: widget.minute.schema,
-                status: widget.minute.status,
-              );
-              final submit = await widget.api.submit(minute);
-              submit.when(
-                (success) {
-                  Fluttertoast.showToast(msg: 'Ata criada com sucesso', gravity: ToastGravity.BOTTOM);
-                  context.pushReplacementNamed(MinuteListController.name);
-                },
-                (error) {
-                  Fluttertoast.showToast(msg: error.message, gravity: ToastGravity.BOTTOM);
-                },
-              );
-            },
-            icon: const Icon(Icons.save_as),
-          ),
-        ],
+        actions: _submitting
+            ? [const CircularProgressIndicator()]
+            : [
+                IconButton(
+                  onPressed: () async {
+                    await _showDialog(context);
+                  },
+                  icon: const Icon(Icons.add),
+                ),
+                IconButton(
+                  onPressed: () async {
+                    setState(() => _submitting = true);
+                    final minute = Minutes(
+                      id: widget.minute.id,
+                      user: widget.minute.user,
+                      assignments: minuteAssignments.map((a) => a.assign).toList(),
+                      date: _minuteDate,
+                      schema: widget.minute.schema,
+                      status: widget.minute.status,
+                    );
+                    final submit = await widget.api.submit(minute);
+                    submit.when(
+                      (success) {
+                        Fluttertoast.showToast(msg: 'Ata criada com sucesso', gravity: ToastGravity.BOTTOM);
+                        context.pop();
+                        context.pushReplacement(MinuteListController.path);
+                      },
+                      (error) {
+                        Fluttertoast.showToast(msg: error.message, gravity: ToastGravity.BOTTOM);
+                        setState(() => _submitting = true);
+                      },
+                    );
+                  },
+                  icon: const Icon(Icons.save_as),
+                ),
+              ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 30),
-            ListTile(
-              title: Text(DateFormat('dd/MM/yyyy').format(_minuteDate), textAlign: TextAlign.center),
-              subtitle: const Text('data da reunião', textAlign: TextAlign.center),
-              onTap: widget.minute.id == null ? () => _changeDate(context) : null,
+      body: _submitting
+          ? _submitWidget
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(height: 30),
+                  ListTile(
+                    title: Text(DateFormat('dd/MM/yyyy').format(_minuteDate), textAlign: TextAlign.center),
+                    subtitle: const Text('data da reunião', textAlign: TextAlign.center),
+                    onTap: widget.minute.id == null ? () => _changeDate(context) : null,
+                  ),
+                  ListTile(
+                    title: Text('editado por ${widget.minute.user.name}', textAlign: TextAlign.center),
+                  ),
+                  _getTileIfLabelExists(Label.presiding).first,
+                  _getTileIfLabelExists(Label.driving).first,
+                  const Text('Reconhecimentos', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Column(children: _getTileIfLabelExists(Label.recognition)),
+                  const Divider(),
+                  const Text('Anúncios', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Column(children: _getTileIfLabelExists(Label.announcement)),
+                  const Divider(),
+                  _getTileIfLabelExists(Label.firstHym).first,
+                  _getTileIfLabelExists(Label.regent).first,
+                  ..._getTileIfLabelExists(Label.fistPray),
+                  const Divider(),
+                  const Text('Chamados', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Column(children: _getTileIfLabelExists(Label.call)),
+                  const Divider(),
+                  const Text('Desobrigações', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Column(children: _getTileIfLabelExists(Label.callRelease)),
+                  const Divider(),
+                  const Text('Confirmações', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Column(children: _getTileIfLabelExists(Label.confirmation)),
+                  const Divider(),
+                  _getTileIfLabelExists(Label.sacramentalHym).first,
+                  _getTileIfLabelExists(Label.firstSpeaker).first,
+                  _getTileIfLabelExists(Label.secondSpeaker).first,
+                  _getTileIfLabelExists(Label.intermediaryHym).first,
+                  _getTileIfLabelExists(Label.thirdSpeaker).first,
+                  _getTileIfLabelExists(Label.endingHym).first,
+                  _getTileIfLabelExists(Label.endingPray).first,
+                  const SizedBox(height: 100),
+                ],
+              ),
             ),
-            ListTile(
-              title: Text('editado por ${widget.minute.user.name}', textAlign: TextAlign.center),
-            ),
-            _getTileIfLabelExists(Label.presiding).first,
-            _getTileIfLabelExists(Label.driving).first,
-            const Text('Reconhecimentos', style: TextStyle(fontWeight: FontWeight.bold)),
-            Column(children: _getTileIfLabelExists(Label.recognition)),
-            const Divider(),
-            const Text('Anúncios', style: TextStyle(fontWeight: FontWeight.bold)),
-            Column(children: _getTileIfLabelExists(Label.announcement)),
-            const Divider(),
-            _getTileIfLabelExists(Label.firstHym).first,
-            _getTileIfLabelExists(Label.regent).first,
-            ..._getTileIfLabelExists(Label.fistPray),
-            const Divider(),
-            const Text('Chamados', style: TextStyle(fontWeight: FontWeight.bold)),
-            Column(children: _getTileIfLabelExists(Label.call)),
-            const Divider(),
-            const Text('Desobrigações', style: TextStyle(fontWeight: FontWeight.bold)),
-            Column(children: _getTileIfLabelExists(Label.callRelease)),
-            const Divider(),
-            const Text('Confirmações', style: TextStyle(fontWeight: FontWeight.bold)),
-            Column(children: _getTileIfLabelExists(Label.confirmation)),
-            const Divider(),
-            _getTileIfLabelExists(Label.sacramentalHym).first,
-            _getTileIfLabelExists(Label.firstSpeaker).first,
-            _getTileIfLabelExists(Label.secondSpeaker).first,
-            _getTileIfLabelExists(Label.intermediaryHym).first,
-            _getTileIfLabelExists(Label.thirdSpeaker).first,
-            _getTileIfLabelExists(Label.endingHym).first,
-            _getTileIfLabelExists(Label.endingPray).first,
-            const SizedBox(height: 100),
-          ],
-        ),
-      ),
     );
   }
 
@@ -136,6 +146,15 @@ class _MinuteFormState extends State<MinuteForm> {
     setState(() {
       _minuteDate = dt;
     });
+  }
+
+  Widget get _submitWidget {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [Text('enviando...'), SizedBox(height: 10), LinearProgressIndicator()],
+      ),
+    );
   }
 
   (Color, Color) _colorByStatus(MinuteStatus status) {
@@ -160,18 +179,18 @@ class _MinuteFormState extends State<MinuteForm> {
 
   _addAssign(Assign assign) {
     setState(() {
-      _assign.add(Assignment(hash: _generateRandomString(10), assign: assign));
+      minuteAssignments.add(Assignment(hash: _generateRandomString(10), assign: assign));
     });
   }
 
   _removeAssign(String hash) {
     setState(() {
-      _assign.removeWhere((assign) => assign.hash == hash);
+      minuteAssignments.removeWhere((assign) => assign.hash == hash);
     });
   }
 
   List<Widget> _getTileIfLabelExists(Label label) {
-    final assigns = _assign
+    final assigns = minuteAssignments
         .where((element) => element.assign.label == label)
         .map(
           (e) => AssignTile(assignment: e, removeFunction: _removeAssign, editFunction: _editFunction),
@@ -183,12 +202,11 @@ class _MinuteFormState extends State<MinuteForm> {
   }
 
   _editFunction(Assignment assignment, Assign assign) {
-    _assign.removeWhere((element) => element.hash == assignment.hash);
+    minuteAssignments.removeWhere((element) => element.hash == assignment.hash);
     final newAssignment = Assignment(hash: assignment.hash, assign: assign);
     setState(() {
-      _assign.add(newAssignment);
+      minuteAssignments.add(newAssignment);
     });
-    print(_assign.length);
   }
 
   _showDialog(BuildContext context) async {
@@ -196,7 +214,7 @@ class _MinuteFormState extends State<MinuteForm> {
       context: context,
       builder: (context) => OptionDeciderDialog(
         shape: widget.minute.schema.shape,
-        labels: _assign.map((e) => e.assign.label).toList(),
+        labels: minuteAssignments.map((e) => e.assign.label).toList(),
       ),
     );
     if (label == null) return;

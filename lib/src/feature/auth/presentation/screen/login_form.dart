@@ -19,6 +19,7 @@ class _LoginFormState extends State<LoginForm> {
   final password = TextEditingController();
 
   bool _hide = true;
+  bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -69,19 +70,27 @@ class _LoginFormState extends State<LoginForm> {
                             ScaffoldMessenger.of(context).showSnackBar(snackBar);
                             context.read<AppBloc>().add(ToBootedEvent());
                           }
+                          setState(() {
+                            _loading = false;
+                          });
                         },
                         builder: (context, state) {
                           final bloc = context.read<AppBloc>();
-                          return ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black,
-                              minimumSize: const Size.fromHeight(50),
-                            ),
-                            onPressed: () {
-                              bloc.add(AppLoginEvent(username: user.text, password: password.text));
-                            },
-                            child: const Text('Login'),
-                          );
+                          return _loading
+                              ? const CircularProgressIndicator()
+                              : ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.black,
+                                    minimumSize: const Size.fromHeight(50),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _loading = true;
+                                    });
+                                    bloc.add(AppLoginEvent(username: user.text, password: password.text));
+                                  },
+                                  child: const Text('Login'),
+                                );
                         },
                       ),
                     ],

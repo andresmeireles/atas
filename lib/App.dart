@@ -27,10 +27,13 @@ final _routes = GoRouter(
       builder: (_, __) => const AddMinuteController(),
     ),
     GoRoute(
-      name: MinuteListController.name,
-      path: MinuteListController.path,
-      builder: (_, __) => const MinuteListController(),
-    ),
+        name: MinuteListController.name,
+        path: MinuteListController.path,
+        builder: (_, __) => const MinuteListController(),
+        redirect: (context, state) {
+          print('hex');
+          return MinuteListController.path;
+        }),
     GoRoute(
       name: EditMinuteController.name,
       path: '${EditMinuteController.path}/:id',

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:atas/src/core/core.dart';
 import 'package:atas/src/feature/auth/auth.dart';
 import 'package:bloc/bloc.dart';
@@ -64,7 +62,6 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         emit(state.copyWith(token: '', status: AppStatus.loggedOut));
       }
     } catch (e) {
-      log(e.toString());
       emit(state.copyWith(token: '', status: AppStatus.loggedOut));
     }
   }
