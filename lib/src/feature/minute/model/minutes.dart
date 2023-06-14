@@ -33,11 +33,11 @@ class Minutes implements Submittable {
   }
 
   factory Minutes.fromMap(Map<String, dynamic> map) {
-    final List assignments = jsonDecode(map['assignments']);
+    final assign = map['assignments'].map((a) => AssignmentFactory.fromJsonMap(a)).toList();
     return Minutes(
       date: DateTime.parse(map['date']),
       schema: Schema.values.firstWhere((s) => s.value == map['schema'] as String),
-      assignments: assignments.map((a) => AssignmentFactory.fromJsonMap(a)).toList(),
+      assignments: List<Assign>.from(assign),
       status: MinuteStatus.values.firstWhere((ms) => ms.value == map['status']),
       user: User.fromMap(map['user_id'] as Map<String, dynamic>),
       id: map['id'],

@@ -10,10 +10,10 @@ class AssignmentModalFormHandler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (label) {
-      case Label.firstHym:
+      case Label.firstHymn:
       case Label.sacramentalHym:
       case Label.intermediaryHym:
-      case Label.endingHym:
+      case Label.endingHymn:
         return HymDialog(label: label);
       case Label.call:
       case Label.callRelease:

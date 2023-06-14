@@ -15,7 +15,7 @@ class HymDialog extends StatelessWidget {
     final number = TextEditingController(text: this.number.toString());
 
     commit() {
-      Navigator.of(context).pop((Types.hym, (name.text, int.tryParse(number.text) ?? 0)));
+      Navigator.of(context).pop((Types.hymn, (name.text, int.tryParse(number.text) ?? 0)));
     }
 
     return DialogBase(

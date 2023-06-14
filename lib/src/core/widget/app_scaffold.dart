@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:developer';
 
+import 'package:atas/src/core/core.dart';
 import 'package:atas/src/feature/auth/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class AppScaffold extends StatefulWidget {
@@ -26,6 +29,7 @@ class _AppScaffoldState extends State<AppScaffold> {
         (success) => setState(() => _loading = false),
         (error) {
           log(error.toString());
+          scheduleMicrotask(() => context.read<AppBloc>().add(AppLogoutEvent()));
           context.go('/login');
         },
       );

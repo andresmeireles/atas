@@ -16,8 +16,8 @@ class AssignmentFactory {
     switch (type) {
       case Types.call:
         return Call(call: decoded['call'], label: label, name: decoded['name']);
-      case Types.hym:
-        return Hym(name: decoded['name'], number: decoded['number'], label: label);
+      case Types.hymn:
+        return Hymn(name: decoded['name'], number: decoded['number'], label: label);
       case Types.simpleText:
         return SimpleText(value: decoded['value'], label: label);
     }

@@ -15,7 +15,7 @@ class AssignTile extends StatelessWidget {
     switch (type) {
       case Types.call:
         return CallTile(assignment: assignment, removeFunction: removeFunction, editFunction: editFunction);
-      case Types.hym:
+      case Types.hymn:
         return HymTile(assignment: assignment, removeFunction: removeFunction, editFunction: editFunction);
       case Types.simpleText:
         return SimpleTextTile(assignment: assignment, removeFunction: removeFunction, editFunction: editFunction);

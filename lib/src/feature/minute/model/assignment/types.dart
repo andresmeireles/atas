@@ -1,6 +1,6 @@
 enum Types {
   call('call'),
-  hym('hym'),
+  hymn('hym'),
   simpleText('simple_text');
 
   final String value;

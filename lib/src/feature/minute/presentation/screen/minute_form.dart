@@ -108,7 +108,7 @@ class _MinuteFormState extends State<MinuteForm> {
                   const Text('Anúncios', style: TextStyle(fontWeight: FontWeight.bold)),
                   Column(children: _getTileIfLabelExists(Label.announcement)),
                   const Divider(),
-                  _getTileIfLabelExists(Label.firstHym).first,
+                  _getTileIfLabelExists(Label.firstHymn).first,
                   _getTileIfLabelExists(Label.regent).first,
                   ..._getTileIfLabelExists(Label.fistPray),
                   const Divider(),
@@ -126,7 +126,7 @@ class _MinuteFormState extends State<MinuteForm> {
                   _getTileIfLabelExists(Label.secondSpeaker).first,
                   _getTileIfLabelExists(Label.intermediaryHym).first,
                   _getTileIfLabelExists(Label.thirdSpeaker).first,
-                  _getTileIfLabelExists(Label.endingHym).first,
+                  _getTileIfLabelExists(Label.endingHymn).first,
                   _getTileIfLabelExists(Label.endingPray).first,
                   const SizedBox(height: 100),
                 ],
@@ -227,8 +227,8 @@ class _MinuteFormState extends State<MinuteForm> {
     switch (type) {
       case Types.call:
         _addAssign(Call(name: values.$1, call: values.$2, label: label));
-      case Types.hym:
-        _addAssign(Hym(label: label, name: values.$1, number: values.$2));
+      case Types.hymn:
+        _addAssign(Hymn(label: label, name: values.$1, number: values.$2));
       case Types.simpleText:
         _addAssign(SimpleText(value: values, label: label));
     }

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:atas/src/feature/minute/minute.dart';
 
-final class Hym implements Assign {
+final class Hymn implements Assign {
   @override
   final Label label;
   final String name;
@@ -10,7 +10,7 @@ final class Hym implements Assign {
   @override
   final Types type;
 
-  Hym({required this.label, required this.name, required this.number}) : type = Types.hym;
+  Hymn({required this.label, required this.name, required this.number}) : type = Types.hymn;
 
   @override
   String toJson() => jsonEncode(toMap());

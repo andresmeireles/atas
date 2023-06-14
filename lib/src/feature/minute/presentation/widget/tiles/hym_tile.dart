@@ -11,7 +11,7 @@ class HymTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hym = assignment.assign as Hym;
+    final hym = assignment.assign as Hymn;
 
     return ListTile(
       leading: Column(
@@ -31,7 +31,7 @@ class HymTile extends StatelessWidget {
         );
         if (edit == null) return;
         final (_, (name, number)) = edit;
-        final updatedAssign = Hym(name: name, label: hym.label, number: number);
+        final updatedAssign = Hymn(name: name, label: hym.label, number: number);
         editFunction(assignment, updatedAssign);
       },
       title: Text(hym.name),

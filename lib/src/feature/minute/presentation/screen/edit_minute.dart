@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:atas/src/core/core.dart';
 import 'package:atas/src/feature/minute/minute.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +25,11 @@ class _EditMinuteFormState extends State<EditMinuteForm> {
     widget.getMinuteApi.byId(widget.minuteId).then((value) {
       value.when(
         (success) {
-          setState(() {
-            _isLoading = false;
-            _minutes = success;
+          scheduleMicrotask(() {
+            setState(() {
+              _isLoading = false;
+              _minutes = success;
+            });
           });
         },
         (error) => Fluttertoast.showToast(msg: error.message),
