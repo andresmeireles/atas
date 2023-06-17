@@ -1,18 +1,15 @@
 import 'package:atas/src/core/core.dart';
-import 'package:atas/src/feature/minute/api/export_pdf.dart';
 import 'package:atas/src/feature/minute/minute.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:printing/printing.dart';
 
 class MinuteDashboard extends StatefulWidget {
   final GetMinute api;
-  final ExportPdf pdf;
 
-  const MinuteDashboard({required this.api, required this.pdf, super.key});
+  const MinuteDashboard({required this.api, super.key});
 
   @override
   State<MinuteDashboard> createState() => _MinuteDashboardState();
@@ -86,12 +83,6 @@ class _MinuteDashboardState extends State<MinuteDashboard> {
                     onPressed: () => context.push('${MinuteListController.path}/${e.id}'),
                     icon: const Icon(Icons.remove_red_eye),
                   ),
-                  IconButton(
-                      onPressed: () async {
-                        final pdfFile = await widget.pdf.makePdf(e);
-                        Printing.sharePdf(bytes: pdfFile, filename: 'document.pdf');
-                      },
-                      icon: const Icon(Icons.inventory_outlined)),
                   IconButton(
                     icon: const Icon(Icons.arrow_forward),
                     onPressed: () async {

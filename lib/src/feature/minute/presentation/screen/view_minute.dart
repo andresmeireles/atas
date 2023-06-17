@@ -44,22 +44,24 @@ class _ViewMinuteState extends State<ViewMinute> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      appBar: AppBar(title: const Text('visualizar')),
+      appBar: AppBar(title: _loading ? const Text('visualizar') : _titleRow),
       body: _loading ? _load : _view,
     );
   }
 
+  get _titleRow => Column(
+        children: [const Text('Reunião Sacramental'), Text(DateFormat('d/MM/y').format(_minute.date))],
+      );
+
   get _view {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: ListView(
         children: [
-          _leadingText('Reunião Sacramental'),
-          Row(
-            children: [Text('Data: ${DateFormat('d/MM/y').format(_minute.date)}')],
-          ),
+          const SizedBox(height: 8),
           _callRow(label: Label.presiding),
           _callRow(label: Label.driving),
+          const SizedBox(height: 20),
           if (_getMultiples(Label.recognition, Types.call).isNotEmpty)
             ..._multipleRow(name: 'Reconhecimento', label: Label.recognition, type: Types.call),
           if (_getMultiples(Label.announcement, Types.simpleText).isNotEmpty)
@@ -71,33 +73,36 @@ class _ViewMinuteState extends State<ViewMinute> {
           if (_getMultiples(Label.callRelease, Types.call).isNotEmpty)
             ..._multipleRow(name: 'Desobrigação', label: Label.callRelease, type: Types.call),
           _hymnRow(label: Label.sacramentalHym, placeholderText: 'hino sacramental'),
+          const SizedBox(height: 20),
           _leadingText('Sacramento'),
+          const SizedBox(height: 20),
           _simpleRow(label: Label.firstSpeaker, placeholderText: 'primeiro orador'),
           _simpleRow(label: Label.secondSpeaker),
           _hymnRow(label: Label.intermediaryHym, placeholderText: 'Hino Intermediário'),
           _simpleRow(label: Label.thirdSpeaker, placeholderText: 'ultimo orador'),
           _hymnRow(label: Label.endingHymn, placeholderText: 'hino de encerramento'),
           _simpleRow(label: Label.endingPray, placeholderText: 'oração de encerramento'),
+          const SizedBox(height: 30),
         ],
       ),
     );
   }
 
-  _leadingText(String text) => Text(text, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15));
+  _leadingText(String text) {
+    return Text(text, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15));
+  }
 
   Widget _callRow({required Label label, String? placeholderText, int size = 30}) {
     final call = _getSingleCall(label);
     if (call == null) return Text(placeholderText ?? 'preencher');
     final textArea = translate(call.label.value);
-    return Flexible(
-      child: ListTile(
-        leading: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text('$textArea:'.padRight(size - textArea.length))],
-        ),
-        title: Text(call.name),
-        trailing: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Text(call.call)]),
+    return ListTile(
+      leading: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [Text('$textArea:'.padRight(size - textArea.length))],
       ),
+      title: Text(call.name),
+      subtitle: Text(call.call),
     );
   }
 
@@ -105,14 +110,12 @@ class _ViewMinuteState extends State<ViewMinute> {
     final simple = _getSingleSimple(label);
     if (simple == null) return Text(placeholderText ?? 'preencher');
     final text = translate(simple.label.value);
-    return Flexible(
-      child: ListTile(
-        leading: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text('$text:'.padRight(size - text.length))],
-        ),
-        title: Text(simple.value),
+    return ListTile(
+      leading: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [Text('$text:'.padRight(size - text.length))],
       ),
+      title: Text(simple.value),
     );
   }
 
@@ -120,29 +123,40 @@ class _ViewMinuteState extends State<ViewMinute> {
     final hymn = _getSingleHymn(label);
     if (hymn == null) return Text(placeholderText ?? 'preencher');
     final text = translate(hymn.label.value);
-    return Flexible(
-      child: ListTile(
-        leading: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text('$text:'.padRight(size - text.length))],
-        ),
-        title: Text(hymn.name),
-        trailing: Text('Nº ${hymn.number}'),
+    return ListTile(
+      leading: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [Text('$text:'.padRight(size - text.length))],
       ),
+      title: Text(hymn.name),
+      trailing: Text('Nº ${hymn.number}'),
     );
   }
 
   List<Widget> _multipleRow({required String name, required Label label, required Types type}) {
     return [
       _leadingText(name),
+      const SizedBox(height: 10),
       SizedBox(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: _getMultiples(label, type).map((e) {
             if (e.type == Types.call) {
-              return _callRow(label: e.label);
+              final c = e as Call;
+              return Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(c.name.padRight(35 - c.name.length)),
+                      Text(c.call),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              );
             }
-            return _simpleRow(label: e.label);
+            final s = e as SimpleText;
+            return Text(s.value, style: const TextStyle(fontSize: 16));
           }).toList(),
         ),
       ),

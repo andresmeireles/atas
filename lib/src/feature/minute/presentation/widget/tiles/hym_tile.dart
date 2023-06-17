@@ -23,7 +23,7 @@ class HymTile extends StatelessWidget {
       onLongPress: () async {
         final edit = await showDialog(
           context: context,
-          builder: (context) => HymDialog(
+          builder: (context) => HymnDialog(
             label: hym.label,
             name: hym.name,
             number: hym.number,

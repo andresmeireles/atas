@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 import '../../../minute.dart';
 
-class HymDialog extends StatelessWidget {
+class HymnDialog extends StatelessWidget {
   final Label label;
   final String? name;
   final int? number;
 
-  const HymDialog({required this.label, this.name, this.number, super.key});
+  const HymnDialog({required this.label, this.name, this.number, super.key});
 
   @override
   Widget build(BuildContext context) {
     final name = TextEditingController(text: this.name);
-    final number = TextEditingController(text: this.number.toString());
+    final number = TextEditingController(text: this.number?.toString() ?? '');
 
     commit() {
       Navigator.of(context).pop((Types.hymn, (name.text, int.tryParse(number.text) ?? 0)));
