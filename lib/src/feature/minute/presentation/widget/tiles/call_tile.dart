@@ -4,10 +4,10 @@ import 'package:flutter_translate/flutter_translate.dart';
 
 class CallTile extends StatelessWidget {
   final Assignment assignment;
-  final Function(String) removeFunction;
   final Function(Assignment, Assign) editFunction;
+  final Function(String)? removeFunction;
 
-  const CallTile({required this.assignment, required this.removeFunction, required this.editFunction, super.key});
+  const CallTile({required this.assignment, this.removeFunction, required this.editFunction, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +34,12 @@ class CallTile extends StatelessWidget {
         final updatedAssign = Call(name: name, label: call.label, call: callName);
         editFunction(assignment, updatedAssign);
       },
-      trailing: IconButton(
-        onPressed: () => removeFunction(assignment.hash),
-        icon: const Icon(Icons.remove, color: Colors.red),
-      ),
+      trailing: removeFunction == null
+          ? null
+          : IconButton(
+              onPressed: () => removeFunction!(assignment.hash),
+              icon: const Icon(Icons.remove, color: Colors.red),
+            ),
     );
   }
 }

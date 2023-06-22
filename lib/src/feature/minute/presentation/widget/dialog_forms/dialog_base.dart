@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 
 import '../../../minute.dart';
 
@@ -12,7 +13,7 @@ class DialogBase extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(label.value),
+      title: Text(translate(label.value)),
       content: content,
       actions: [
         TextButton(

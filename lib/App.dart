@@ -2,7 +2,6 @@ import 'package:atas/src/core/core.dart';
 import 'package:atas/src/feature/auth/auth.dart';
 import 'package:atas/src/feature/home/home.dart';
 import 'package:atas/src/feature/minute/minute.dart';
-import 'package:atas/src/feature/minute/presentation/controller/view_minute_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

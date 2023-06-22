@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 class AssignTile extends StatelessWidget {
   final Assignment assignment;
-  final Function(String) removeFunction;
+  final Function(String)? removeFunction;
   final Function(Assignment, Assign) editFunction;
 
-  const AssignTile({required this.assignment, required this.removeFunction, required this.editFunction, super.key});
+  const AssignTile({required this.assignment, required this.editFunction, this.removeFunction, super.key});
 
   @override
   Widget build(BuildContext context) {

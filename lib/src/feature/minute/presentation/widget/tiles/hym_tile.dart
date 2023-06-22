@@ -4,10 +4,10 @@ import 'package:flutter_translate/flutter_translate.dart';
 
 class HymTile extends StatelessWidget {
   final Assignment assignment;
-  final Function(String) removeFunction;
+  final Function(String)? removeFunction;
   final Function(Assignment, Assign) editFunction;
 
-  const HymTile({required this.assignment, required this.removeFunction, required this.editFunction, super.key});
+  const HymTile({required this.assignment, this.removeFunction, required this.editFunction, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +36,13 @@ class HymTile extends StatelessWidget {
       },
       title: Text(hym.name),
       subtitle: Text('N° ${hym.number}'),
-      trailing: IconButton(
-        onPressed: () => removeFunction(assignment.hash),
-        icon: const Icon(Icons.remove),
-        color: Colors.red,
-      ),
+      trailing: removeFunction == null
+          ? null
+          : IconButton(
+              onPressed: () => removeFunction!(assignment.hash),
+              icon: const Icon(Icons.remove),
+              color: Colors.red,
+            ),
     );
   }
 }

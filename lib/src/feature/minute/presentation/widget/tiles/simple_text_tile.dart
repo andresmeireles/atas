@@ -4,10 +4,10 @@ import 'package:flutter_translate/flutter_translate.dart';
 
 class SimpleTextTile extends StatelessWidget {
   final Assignment assignment;
-  final Function(String) removeFunction;
+  final Function(String)? removeFunction;
   final Function(Assignment, Assign) editFunction;
 
-  const SimpleTextTile({required this.assignment, required this.removeFunction, required this.editFunction, super.key});
+  const SimpleTextTile({required this.assignment, this.removeFunction, required this.editFunction, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +32,13 @@ class SimpleTextTile extends StatelessWidget {
         editFunction(assignment, updatedAssign);
       },
       title: Text(simpleText.value),
-      trailing: IconButton(
-        onPressed: () => removeFunction(assignment.hash),
-        icon: const Icon(Icons.remove),
-        color: Colors.red,
-      ),
+      trailing: removeFunction == null
+          ? null
+          : IconButton(
+              onPressed: () => removeFunction!(assignment.hash),
+              icon: const Icon(Icons.remove),
+              color: Colors.red,
+            ),
     );
   }
 }

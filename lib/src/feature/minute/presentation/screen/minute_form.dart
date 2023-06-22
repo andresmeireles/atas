@@ -9,7 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
-// loaders para quando o botao de salvar for pressionado
+// loaders para quando o botão de salvar for pressionado
 class MinuteForm extends StatefulWidget {
   final Minutes minute;
   final MinuteSubmit api;
@@ -24,10 +24,12 @@ class _MinuteFormState extends State<MinuteForm> {
   final List<Assignment> minuteAssignments = [];
   DateTime _minuteDate = DateTime.now();
   bool _submitting = false;
+  late bool isExpired;
 
   @override
   void initState() {
     super.initState();
+    isExpired = widget.minute.status == MinuteStatus.expired;
     minuteAssignments
         .addAll(widget.minute.assignments.map((e) => Assignment(hash: const Uuid().v4(), assign: e)).toList());
     _minuteDate = widget.minute.date;
@@ -50,41 +52,17 @@ class _MinuteFormState extends State<MinuteForm> {
           ),
         ),
         actions: _submitting
-            ? [const CircularProgressIndicator()]
-            : [
-                IconButton(
-                  onPressed: () async {
-                    await _showDialog(context);
-                  },
-                  icon: const Icon(Icons.add),
+            ? [
+                const Center(
+                  child: Padding(padding: EdgeInsets.only(right: 15.0), child: CircularProgressIndicator()),
                 ),
-                IconButton(
-                  onPressed: () async {
-                    setState(() => _submitting = true);
-                    final minute = Minutes(
-                      id: widget.minute.id,
-                      user: widget.minute.user,
-                      assignments: minuteAssignments.map((a) => a.assign).toList(),
-                      date: _minuteDate,
-                      schema: widget.minute.schema,
-                      status: widget.minute.status,
-                    );
-                    final submit = await widget.api.submit(minute);
-                    submit.when(
-                      (success) {
-                        Fluttertoast.showToast(msg: 'Ata criada com sucesso', gravity: ToastGravity.BOTTOM);
-                        context.pop();
-                        context.pushReplacement(MinuteListController.path);
-                      },
-                      (error) {
-                        Fluttertoast.showToast(msg: error.message, gravity: ToastGravity.BOTTOM);
-                        setState(() => _submitting = true);
-                      },
-                    );
-                  },
-                  icon: const Icon(Icons.save_as),
-                ),
-              ],
+              ]
+            : isExpired
+                ? []
+                : [
+                    IconButton(onPressed: () async => await _showDialog(context), icon: const Icon(Icons.add)),
+                    IconButton(onPressed: () async => await _submitMinute(), icon: const Icon(Icons.save_as)),
+                  ],
       ),
       body: _submitting
           ? _submitWidget
@@ -135,7 +113,31 @@ class _MinuteFormState extends State<MinuteForm> {
     );
   }
 
-  _changeDate(BuildContext context) async {
+  Future<void> _submitMinute() async {
+    setState(() => _submitting = true);
+    final minute = Minutes(
+      id: widget.minute.id,
+      user: widget.minute.user,
+      assignments: minuteAssignments.map((a) => a.assign).toList(),
+      date: _minuteDate,
+      schema: widget.minute.schema,
+      status: widget.minute.status,
+    );
+    final submit = await widget.api.submit(minute);
+    submit.when(
+      (success) {
+        Fluttertoast.showToast(msg: 'Ata criada com sucesso', gravity: ToastGravity.BOTTOM);
+        context.pop();
+        context.pushReplacement(MinuteListController.path);
+      },
+      (error) {
+        Fluttertoast.showToast(msg: error.message, gravity: ToastGravity.BOTTOM);
+        setState(() => _submitting = true);
+      },
+    );
+  }
+
+  Future<void> _changeDate(BuildContext context) async {
     final dt = await showDatePicker(
       context: context,
       initialDate: _minuteDate,
@@ -143,9 +145,7 @@ class _MinuteFormState extends State<MinuteForm> {
       lastDate: DateTime(DateTime.now().year + 1),
     );
     if (dt == null) return;
-    setState(() {
-      _minuteDate = dt;
-    });
+    setState(() => _minuteDate = dt);
   }
 
   Widget get _submitWidget {
@@ -178,22 +178,17 @@ class _MinuteFormState extends State<MinuteForm> {
   }
 
   _addAssign(Assign assign) {
-    setState(() {
-      minuteAssignments.add(Assignment(hash: _generateRandomString(10), assign: assign));
-    });
+    setState(() => minuteAssignments.add(Assignment(hash: _generateRandomString(10), assign: assign)));
   }
 
-  _removeAssign(String hash) {
-    setState(() {
-      minuteAssignments.removeWhere((assign) => assign.hash == hash);
-    });
-  }
+  _removeAssign(String hash) => setState(() => minuteAssignments.removeWhere((assign) => assign.hash == hash));
 
   List<Widget> _getTileIfLabelExists(Label label) {
     final assigns = minuteAssignments
         .where((element) => element.assign.label == label)
         .map(
-          (e) => AssignTile(assignment: e, removeFunction: _removeAssign, editFunction: _editFunction),
+          (e) =>
+              AssignTile(assignment: e, removeFunction: isExpired ? null : _removeAssign, editFunction: _editFunction),
         )
         .toList();
     if (assigns.isEmpty) return [const SizedBox()];
@@ -203,10 +198,7 @@ class _MinuteFormState extends State<MinuteForm> {
 
   _editFunction(Assignment assignment, Assign assign) {
     minuteAssignments.removeWhere((element) => element.hash == assignment.hash);
-    final newAssignment = Assignment(hash: assignment.hash, assign: assign);
-    setState(() {
-      minuteAssignments.add(newAssignment);
-    });
+    setState(() => minuteAssignments.add(Assignment(hash: assignment.hash, assign: assign)));
   }
 
   _showDialog(BuildContext context) async {
@@ -227,10 +219,13 @@ class _MinuteFormState extends State<MinuteForm> {
     switch (type) {
       case Types.call:
         _addAssign(Call(name: values.$1, call: values.$2, label: label));
+        break;
       case Types.hymn:
         _addAssign(Hymn(label: label, name: values.$1, number: values.$2));
+        break;
       case Types.simpleText:
         _addAssign(SimpleText(value: values, label: label));
+        break;
     }
   }
 }
