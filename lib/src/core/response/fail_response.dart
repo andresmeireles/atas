@@ -4,9 +4,9 @@ import 'dart:convert';
 class FailResponse {
   final String message;
 
-  const FailResponse._(this.message);
+  const FailResponse(this.message);
 
-  factory FailResponse.fromMap(Map<String, dynamic> map) => FailResponse._(map['message'] as String);
+  factory FailResponse.fromMap(Map<String, dynamic> map) => FailResponse(map['message'] as String);
 
   factory FailResponse.fromJson(String source) => FailResponse.fromMap(json.decode(source) as Map<String, dynamic>);
 }

@@ -52,9 +52,7 @@ class _MinuteDashboardState extends State<MinuteDashboard> {
   Widget build(BuildContext context) {
     return AppScaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.push(AddMinuteController.path);
-        },
+        onPressed: () => context.push(SelectMinuteToCreateController.path),
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(title: const Text('lista de atas')),

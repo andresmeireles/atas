@@ -26,7 +26,10 @@ final class Auth with AppHttpCore {
     final request = await postRequest('v1/login', Login(username: username, password: password));
     return request.when(
       (success) => Success(LoginResponse.fromJson(success)),
-      (error) => Error(error),
+      (error) {
+        log(error.message);
+        return Error(error);
+      },
     );
   }
 

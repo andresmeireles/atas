@@ -13,8 +13,9 @@ import 'package:uuid/uuid.dart';
 class MinuteForm extends StatefulWidget {
   final Minutes minute;
   final MinuteSubmit api;
+  final List<MeetItem> minuteAssignments;
 
-  const MinuteForm({required this.minute, required this.api, super.key});
+  const MinuteForm({required this.minute, required this.api, this.minuteAssignments = const [], super.key});
 
   @override
   State<MinuteForm> createState() => _MinuteFormState();

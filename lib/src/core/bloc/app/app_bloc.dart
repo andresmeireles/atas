@@ -40,7 +40,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
           return;
         }
       }
-      throw 'error on login';
+      throw response.tryGetError()!.message;
     } catch (e) {
       emit(state.copyWith(token: '', status: AppStatus.failLogin));
     }

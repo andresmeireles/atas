@@ -22,9 +22,15 @@ final _routes = GoRouter(
     GoRoute(name: HomeController.name, path: HomeController.path, builder: (_, __) => const HomeController()),
     GoRoute(name: AuthController.name, path: AuthController.path, builder: (_, __) => const AuthController()),
     GoRoute(
-      name: AddMinuteController.name,
-      path: AddMinuteController.path,
-      builder: (_, __) => const AddMinuteController(),
+      path: AddMinuteController.path(),
+      builder: (_, state) {
+        return AddMinuteController(meetTypeId: int.parse(state.pathParameters['meetTypeId'].toString()));
+      },
+    ),
+    GoRoute(
+      name: SelectMinuteToCreateController.name,
+      path: SelectMinuteToCreateController.path,
+      builder: (_, __) => const SelectMinuteToCreateController(),
     ),
     GoRoute(
       name: MinuteListController.name,

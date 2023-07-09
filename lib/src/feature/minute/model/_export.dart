@@ -5,3 +5,5 @@ export 'label.dart';
 export 'minute_shape/_export.dart';
 export 'assignment.dart';
 export 'minute_status.dart';
+export 'meet_type.dart';
+export 'meet_item.dart';
