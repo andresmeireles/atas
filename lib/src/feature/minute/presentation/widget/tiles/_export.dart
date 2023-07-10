@@ -1,3 +1,3 @@
-export 'call_tile.dart';
-export 'hym_tile.dart';
-export 'simple_text_tile.dart';
+export 'call_tile_bloc.dart';
+export 'hymn_tile_bloc.dart';
+export 'simple_text_tile_bloc.dart';

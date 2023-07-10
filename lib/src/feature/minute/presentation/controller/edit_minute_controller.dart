@@ -11,6 +11,11 @@ class EditMinuteController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EditMinuteForm(minuteId: minuteId, getMinuteApi: GetMinute(), editMinute: EditMinute());
+    return EditMinuteForm(
+      minuteId: minuteId,
+      getMinuteApi: GetMinute(),
+      submitMinute: EditMinute(),
+      meetApi: Meet(),
+    );
   }
 }

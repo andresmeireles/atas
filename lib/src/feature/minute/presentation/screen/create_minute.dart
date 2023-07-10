@@ -21,6 +21,7 @@ class _CreateMinuteState extends State<CreateMinute> {
   late MeetType _meet;
   final List<MeetItem> _items = [];
   bool _fail = false;
+  bool _loading = true;
 
   @override
   void initState() {
@@ -41,6 +42,7 @@ class _CreateMinuteState extends State<CreateMinute> {
       _meet = meet.tryGetSuccess()!;
       _items.clear();
       _items.addAll(items.tryGetSuccess()!);
+      _loading = false;
     });
   }
 
@@ -48,15 +50,15 @@ class _CreateMinuteState extends State<CreateMinute> {
   Widget build(BuildContext context) {
     final user = context.read<AppBloc>().state.user;
 
-    return MinuteForm(
-      api: widget.sendMinuteApi,
-      minute: Minutes(
-        date: DateTime.now(),
-        assignments: [],
-        schema: Schema.sacramental,
-        status: MinuteStatus.draft,
-        user: user,
-      ),
+    if (_fail) {}
+
+    if (_loading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    return BlocProvider(
+      create: (context) => MinuteBloc(items: _items, meetType: _meet, user: user, minuteSubmit: widget.sendMinuteApi),
+      child: const MinuteForm(),
     );
   }
 }

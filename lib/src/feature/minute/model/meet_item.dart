@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:atas/src/feature/minute/minute.dart';
@@ -33,8 +32,8 @@ class MeetItem {
       id: map['id'] as int,
       name: map['name'] as String,
       type: Types.values.firstWhere((type) => map['type'].toString() == type.value),
-      isRepeatable: map['isRepeatable'] as bool,
-      isObligatory: map['isObligatory'] as bool,
+      isRepeatable: map['is_repeatable'] as bool,
+      isObligatory: map['is_obligatory'] as bool,
     );
   }
 

@@ -3,14 +3,22 @@ import 'dart:async';
 import 'package:atas/src/core/core.dart';
 import 'package:atas/src/feature/minute/minute.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class EditMinuteForm extends StatefulWidget {
   final int minuteId;
   final GetMinute getMinuteApi;
-  final EditMinute editMinute;
+  final MinuteSubmit submitMinute;
+  final Meet meetApi;
 
-  const EditMinuteForm({required this.minuteId, required this.getMinuteApi, required this.editMinute, super.key});
+  const EditMinuteForm({
+    required this.minuteId,
+    required this.getMinuteApi,
+    required this.submitMinute,
+    required this.meetApi,
+    super.key,
+  });
 
   @override
   State<EditMinuteForm> createState() => _EditMinuteFormState();
@@ -19,28 +27,56 @@ class EditMinuteForm extends StatefulWidget {
 class _EditMinuteFormState extends State<EditMinuteForm> {
   bool _isLoading = true;
   late Minutes _minutes;
+  late MeetType _meetType;
+  late List<MeetItem> _meetItems;
 
   @override
   void initState() {
-    widget.getMinuteApi.byId(widget.minuteId).then((value) {
-      value.when(
-        (success) {
-          scheduleMicrotask(() {
-            setState(() {
-              _isLoading = false;
-              _minutes = success;
-            });
-          });
-        },
-        (error) => Fluttertoast.showToast(msg: error.message),
-      );
-    });
     super.initState();
+    scheduleMicrotask(() => _setup());
+  }
+
+  Future<void> _setup() async {
+    final requestMinute = await widget.getMinuteApi.byId(widget.minuteId);
+    final requestMeetType = await widget.meetApi.getMeetTypeById(widget.minuteId);
+    final requestMeetItems = await widget.meetApi.getMeetItems(widget.minuteId);
+    if (requestMinute.isError()) {
+      Fluttertoast.showToast(msg: requestMinute.tryGetError()!.message);
+      return;
+    }
+    if (requestMeetType.isError()) {
+      Fluttertoast.showToast(msg: requestMeetItems.tryGetError()!.message);
+      return;
+    }
+    if (requestMeetItems.isError()) {
+      Fluttertoast.showToast(msg: requestMinute.tryGetError()!.message);
+      return;
+    }
+    final minute = requestMinute.tryGetSuccess()!;
+    final meetType = requestMeetType.tryGetSuccess()!;
+    final items = requestMeetItems.tryGetSuccess()!;
+    setState(() {
+      _isLoading = false;
+      _minutes = minute;
+      _meetItems = items;
+      _meetType = meetType;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading ? _loading() : MinuteForm(minute: _minutes, api: widget.editMinute);
+    if (_isLoading) return _loading();
+
+    return BlocProvider(
+      create: (_) => MinuteBloc(
+        user: _minutes.user,
+        meetType: _meetType,
+        items: _meetItems,
+        addedItems: _minutes.assignments,
+        minuteSubmit: widget.submitMinute,
+      ),
+      child: const MinuteForm(),
+    );
   }
 
   Widget _loading() => AppScaffold(appBar: AppBar(), body: const Center(child: CircularProgressIndicator()));
