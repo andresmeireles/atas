@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:atas/src/core/utils/export.dart';
 import 'package:atas/src/feature/minute/minute.dart';
 
 class HymnItem extends MinuteItem {
@@ -14,6 +15,7 @@ class HymnItem extends MinuteItem {
     required super.label,
   }) : super(type: Types.hymn);
 
+  @override
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'name': name,
@@ -28,7 +30,7 @@ class HymnItem extends MinuteItem {
       name: map['name'] as String,
       number: map['number'] as int,
       label: map['label'] as String,
-      hash: 'ok',
+      hash: generateRandomString(10),
     );
   }
 

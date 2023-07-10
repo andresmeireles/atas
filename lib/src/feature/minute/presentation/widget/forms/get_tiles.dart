@@ -20,18 +20,18 @@ Widget _singleCallItem(BuildContext context, String label) {
   final item = _minuteItem(context, label, Types.call);
   if (item == null) return const SizedBox();
 
-  return CallTileBloc(item: item as CallItem);
+  return CallTile(item: item as CallItem);
 }
 
 List<Widget> _multipleCallItem(BuildContext context, String label) {
   final items = _minuteItems(context, label, Types.call);
-  return items.map((i) => CallTileBloc(item: i as CallItem)).toList();
+  return items.map((i) => CallTile(item: i as CallItem)).toList();
 }
 
 Widget _singleHymnItem(BuildContext context, String label) {
   final item = _minuteItem(context, label, Types.hymn);
   if (item == null) return const SizedBox();
-  return HymnTileBloc(item: item as HymnItem);
+  return HymnTile(item: item as HymnItem);
 }
 
 // List<Widget> _multipleHymnItem(BuildContext context, String label) {
@@ -42,10 +42,10 @@ Widget _singleHymnItem(BuildContext context, String label) {
 Widget _singleSimpleTextItem(BuildContext context, String label) {
   final item = _minuteItem(context, label, Types.simpleText);
   if (item == null) return const SizedBox();
-  return SimpleTextTileBloc(item: item as SimpleTextItem);
+  return SimpleTextTile(item: item as SimpleTextItem);
 }
 
 List<Widget> _multipleSimpleTextItem(BuildContext context, String label) {
   final items = _minuteItems(context, label, Types.simpleText);
-  return items.map((i) => SimpleTextTileBloc(item: i as SimpleTextItem)).toList();
+  return items.map((i) => SimpleTextTile(item: i as SimpleTextItem)).toList();
 }

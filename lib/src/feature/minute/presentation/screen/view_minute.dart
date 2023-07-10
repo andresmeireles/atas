@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:atas/src/core/core.dart';
 import 'package:atas/src/feature/minute/minute.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 

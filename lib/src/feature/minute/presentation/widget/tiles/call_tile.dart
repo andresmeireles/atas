@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 
-class CallTileBloc extends StatelessWidget {
+class CallTile extends StatelessWidget {
   final MinuteItem item;
   // final Function(Assignment, Assign) editFunction;
   // final Function(String)? removeFunction;
 
-  const CallTileBloc({required this.item, super.key});
+  const CallTile({required this.item, super.key});
 
   @override
   Widget build(BuildContext context) {

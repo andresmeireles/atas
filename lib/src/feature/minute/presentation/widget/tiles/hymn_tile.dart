@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 
-class HymnTileBloc extends StatelessWidget {
+class HymnTile extends StatelessWidget {
   final HymnItem item;
   // final Function(String)? removeFunction;
   // final Function(Assignment, Assign) editFunction;
 
-  const HymnTileBloc({required this.item, super.key});
+  const HymnTile({required this.item, super.key});
 
   @override
   Widget build(BuildContext context) {
