@@ -13,6 +13,23 @@ class SacramentalForm extends StatelessWidget {
             children: [
               const SizedBox(height: 30),
               ListTile(
+                onTap: state.minute.id != null
+                    ? null
+                    : () async {
+                        final date = await showDialog<DateTime?>(
+                          context: context,
+                          builder: (context) {
+                            return DatePickerDialog(
+                              initialDate: state.minute.date,
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime(2035),
+                            );
+                          },
+                        );
+                        print(date);
+                        if (date == null) return;
+                        context.read<MinuteBloc>().add(UpdateMinuteDateEvent(date: date));
+                      },
                 title: Text(DateFormat('dd/MM/yyyy').format(state.minute.date), textAlign: TextAlign.center),
                 subtitle: const Text('data da reunião', textAlign: TextAlign.center),
               ),

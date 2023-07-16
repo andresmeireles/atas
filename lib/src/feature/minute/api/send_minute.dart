@@ -5,6 +5,7 @@ import 'package:multiple_result/multiple_result.dart';
 final class SendMinute with AppHttpCore implements MinuteSubmit {
   @override
   Future<Result<Minutes, FailResponse>> submit(Minutes submit) async {
+    print(submit.toJson());
     final request = postRequest('v1/minutes', submit);
     final response = await request;
     return response.when(

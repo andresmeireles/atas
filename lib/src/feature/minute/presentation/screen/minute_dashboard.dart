@@ -73,7 +73,7 @@ class _MinuteDashboardState extends State<MinuteDashboard> {
                   Text(translate(minute.status.value).toUpperCase()),
                 ],
               ),
-              title: Text(minute.schema.value),
+              title: Text(minute.schema),
               subtitle: Text(DateFormat('dd/MM/y').format(minute.date)),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,

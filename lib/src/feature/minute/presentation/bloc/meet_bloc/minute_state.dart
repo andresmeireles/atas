@@ -69,16 +69,28 @@ class MinuteState extends Equatable {
 
 @immutable
 class MeetInitial extends MinuteState {
-  const MeetInitial._({required List<MeetItem> items, required Minutes minute, List<MinuteItem> addedItems = const []})
-      : super(items: items, minute: minute, status: MinuteBlocStatus.editing, addedItems: addedItems);
+  const MeetInitial._({
+    required List<MeetItem> items,
+    required Minutes minute,
+    List<MinuteItem> addedItems = const [],
+  }) : super(
+          items: items,
+          minute: minute,
+          status: MinuteBlocStatus.editing,
+          addedItems: addedItems,
+        );
 
   factory MeetInitial.init({
     required User user,
     required MeetType meet,
     required List<MeetItem> items,
     List<MinuteItem> addedItems = const [],
+    Minutes? minute,
   }) {
-    final schema = Schema.values.firstWhere((s) => s.value == meet.name);
-    return MeetInitial._(items: items, minute: Minutes.init(user: user, schema: schema), addedItems: addedItems);
+    return MeetInitial._(
+      items: items,
+      minute: minute ?? Minutes.init(user: user, schema: meet.name),
+      addedItems: addedItems,
+    );
   }
 }

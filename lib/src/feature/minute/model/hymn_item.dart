@@ -29,7 +29,7 @@ class HymnItem extends MinuteItem {
     return HymnItem(
       name: map['name'] as String,
       number: map['number'] as int,
-      label: map['label'] as String,
+      label: (map['label'] as String).toLowerCase(),
       hash: generateRandomString(10),
     );
   }

@@ -6,9 +6,10 @@ abstract class MinuteEvent {
 }
 
 class SubmitMinuteEvent implements MinuteEvent {
+  final Minutes minute;
   final User user;
 
-  SubmitMinuteEvent({required this.user});
+  SubmitMinuteEvent({required this.minute, required this.user});
 }
 
 class UpdateMinuteDateEvent implements MinuteEvent {

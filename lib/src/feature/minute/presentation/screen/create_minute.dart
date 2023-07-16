@@ -9,9 +9,9 @@ import '../../minute.dart';
 class CreateMinute extends StatefulWidget {
   final Meet meetApi;
   final SendMinute sendMinuteApi;
-  final int meetTypeId;
+  final String meetType;
 
-  const CreateMinute({required this.meetApi, required this.sendMinuteApi, required this.meetTypeId, super.key});
+  const CreateMinute({required this.meetApi, required this.sendMinuteApi, required this.meetType, super.key});
 
   @override
   State<CreateMinute> createState() => _CreateMinuteState();
@@ -32,9 +32,14 @@ class _CreateMinuteState extends State<CreateMinute> {
   }
 
   Future<void> _getMeetAndItems() async {
-    final meet = await widget.meetApi.getMeetTypeById(widget.meetTypeId);
-    final items = await widget.meetApi.getMeetItems(widget.meetTypeId);
-    if (meet.isError() && items.isError()) {
+    final meet = await widget.meetApi.getMeetTypeByName(widget.meetType);
+    if (meet.isError()) {
+      setState(() => _fail = true);
+      return;
+    }
+
+    final items = await widget.meetApi.getMeetItems(meet.tryGetSuccess()!.id);
+    if (items.isError()) {
       setState(() => _fail = true);
       return;
     }
@@ -53,8 +58,10 @@ class _CreateMinuteState extends State<CreateMinute> {
     if (_fail) {}
 
     if (_loading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return Scaffold(appBar: AppBar(), body: const Center(child: CircularProgressIndicator()));
     }
+
+    print('overload');
 
     return BlocProvider(
       create: (context) => MinuteBloc(items: _items, meetType: _meet, user: user, minuteSubmit: widget.sendMinuteApi),

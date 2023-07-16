@@ -15,6 +15,7 @@ class MinuteBloc extends Bloc<MinuteEvent, MinuteState> {
   final MeetType meetType;
   final List<MeetItem> items;
   final MinuteSubmit minuteSubmit;
+  final Minutes? minutes;
 
   MinuteBloc({
     required this.user,
@@ -22,8 +23,9 @@ class MinuteBloc extends Bloc<MinuteEvent, MinuteState> {
     required this.items,
     required this.minuteSubmit,
     List<MinuteItem> addedItems = const [],
+    this.minutes,
   }) : super(
-          MeetInitial.init(user: user, meet: meetType, items: items, addedItems: addedItems),
+          MeetInitial.init(user: user, meet: meetType, items: items, addedItems: addedItems, minute: minutes),
         ) {
     on<SubmitMinuteEvent>(_submitMinute);
     on<UpdateMinuteDateEvent>(_updateDate);
@@ -40,6 +42,7 @@ class MinuteBloc extends Bloc<MinuteEvent, MinuteState> {
       assignments: state.addedItems,
       user: event.user,
       status: state.minute.status,
+      id: state.minute.id,
     );
     final submit = await minuteSubmit.submit(minute);
     submit.when(
@@ -49,8 +52,8 @@ class MinuteBloc extends Bloc<MinuteEvent, MinuteState> {
   }
 
   _updateDate(UpdateMinuteDateEvent event, Emitter emit) {
-    // final minute = state.minute.copyWith(date: event.date);
-    // emit(state.copyWith(minute: minute));
+    final minute = state.minute.copyWith(date: event.date);
+    emit(state.copyWith(minute: minute));
   }
 
   _addMinuteItem(AddMinuteItem event, Emitter emit) {

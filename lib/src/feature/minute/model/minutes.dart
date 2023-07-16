@@ -8,7 +8,7 @@ import 'package:atas/src/feature/minute/minute.dart';
 
 class Minutes implements Submittable {
   final DateTime date;
-  final Schema schema;
+  final String schema;
   final List<MinuteItem> assignments;
   final MinuteStatus status;
   final User user;
@@ -23,7 +23,7 @@ class Minutes implements Submittable {
     this.id,
   });
 
-  factory Minutes.init({required User user, required Schema schema}) {
+  factory Minutes.init({required User user, required String schema}) {
     return Minutes(
       date: DateTime.now(),
       schema: schema,
@@ -36,7 +36,7 @@ class Minutes implements Submittable {
   Map<String, dynamic> toMap() {
     return {
       'date': DateFormat('y-MM-dd').format(date),
-      'schema': schema.value,
+      'schema': schema,
       'user': user.toMap(),
       'id': id,
       'assignments': assignments.map((assign) => assign.toMap()).toList(),
@@ -48,7 +48,7 @@ class Minutes implements Submittable {
     final assign = map['assignments'].map((a) => AssignmentFactory.fromJsonMap(a)).toList();
     return Minutes(
       date: DateTime.parse(map['date']),
-      schema: Schema.values.firstWhere((s) => s.value == map['schema'] as String),
+      schema: map['schema'] as String,
       assignments: List<MinuteItem>.from(assign),
       status: MinuteStatus.values.firstWhere((ms) => ms.value == map['status']),
       user: User.fromMap(map['user_id'] as Map<String, dynamic>),
@@ -63,7 +63,7 @@ class Minutes implements Submittable {
 
   Minutes copyWith({
     DateTime? date,
-    Schema? schema,
+    String? schema,
     List<MinuteItem>? assignments,
     MinuteStatus? status,
     User? user,

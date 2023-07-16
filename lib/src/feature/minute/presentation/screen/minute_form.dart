@@ -25,7 +25,9 @@ class MinuteForm extends StatelessWidget {
     return BlocListener<MinuteBloc, MinuteState>(
       listener: (context, state) {
         if (state.status == MinuteBlocStatus.submitted) {
-          context.pop();
+          if (state.minute.id == null) {
+            context.pop();
+          }
           context.pop();
           context.pushReplacementNamed(MinuteListController.name);
         }
@@ -38,7 +40,7 @@ class MinuteForm extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Nova ${translate(state.minute.schema.value)}'),
+                Text('${state.isEditing ? "Alterar" : "Nova"} ${translate(state.minute.schema)}'),
                 Text(translate(state.minute.status.value)),
               ],
             ),
@@ -53,14 +55,13 @@ class MinuteForm extends StatelessWidget {
                   : [
                       IconButton(onPressed: () async => await _showDialog(context, bloc), icon: const Icon(Icons.add)),
                       IconButton(
-                        onPressed: () => bloc.add(SubmitMinuteEvent(user: user)),
+                        onPressed: () => bloc.add(SubmitMinuteEvent(minute: state.minute, user: user)),
                         icon: const Icon(Icons.save_as),
                       ),
                     ],
         ),
-        body: mutateState.status == MinuteBlocStatus.submitting
-            ? _submitWidget
-            : FormHandler(form: state.minute.schema.value),
+        body:
+            mutateState.status == MinuteBlocStatus.submitting ? _submitWidget : FormHandler(form: state.minute.schema),
       ),
     );
   }

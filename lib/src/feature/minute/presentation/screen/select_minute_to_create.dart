@@ -62,7 +62,7 @@ class _SelectMinuteToCreateState extends State<SelectMinuteToCreate> {
             padding: const EdgeInsets.all(12.0),
             child: ListTile(
               title: Text(type.name.toUpperCase()),
-              onTap: () => context.push(AddMinuteController.path(type.id)),
+              onTap: () => context.push(AddMinuteController.path(type.name)),
             ),
           );
         });

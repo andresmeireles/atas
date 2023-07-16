@@ -21,7 +21,7 @@ class SimpleTextItem extends MinuteItem {
   factory SimpleTextItem.fromMap(Map<String, dynamic> map) {
     return SimpleTextItem(
       value: map['value'] as String,
-      label: map['label'] as String,
+      label: (map['label'] as String).toLowerCase(),
       hash: generateRandomString(10),
     );
   }

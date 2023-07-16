@@ -19,8 +19,8 @@ class Meet with AppHttpCore {
     );
   }
 
-  Future<Result<MeetType, FailResponse>> getMeetTypeById(int meetTypeId) async {
-    final request = getRequest('v1/meets/$meetTypeId');
+  Future<Result<MeetType, FailResponse>> getMeetTypeByName(String meetTypeName) async {
+    final request = getRequest('v1/meets/$meetTypeName');
     final response = await request;
 
     return response.when(

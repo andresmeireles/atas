@@ -9,10 +9,10 @@ class AssignmentModalFormHandlerBloc extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    switch (meetItem.name) {
-      case 'hymn':
+    switch (meetItem.type) {
+      case Types.hymn:
         return HymnDialogBloc(meetItem: meetItem);
-      case 'call':
+      case Types.call:
         return CallDialogBloc(meetItem: meetItem);
       default:
         return SimpleTextDialogBloc(meetItem: meetItem);

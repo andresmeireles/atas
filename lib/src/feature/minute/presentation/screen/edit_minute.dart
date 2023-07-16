@@ -38,21 +38,21 @@ class _EditMinuteFormState extends State<EditMinuteForm> {
 
   Future<void> _setup() async {
     final requestMinute = await widget.getMinuteApi.byId(widget.minuteId);
-    final requestMeetType = await widget.meetApi.getMeetTypeById(widget.minuteId);
-    final requestMeetItems = await widget.meetApi.getMeetItems(widget.minuteId);
     if (requestMinute.isError()) {
       Fluttertoast.showToast(msg: requestMinute.tryGetError()!.message);
       return;
     }
+    final minute = requestMinute.tryGetSuccess()!;
+    final requestMeetType = await widget.meetApi.getMeetTypeByName(minute.schema);
     if (requestMeetType.isError()) {
+      Fluttertoast.showToast(msg: requestMeetType.tryGetError()!.message);
+      return;
+    }
+    final requestMeetItems = await widget.meetApi.getMeetItems(requestMeetType.tryGetSuccess()!.id);
+    if (requestMeetItems.isError()) {
       Fluttertoast.showToast(msg: requestMeetItems.tryGetError()!.message);
       return;
     }
-    if (requestMeetItems.isError()) {
-      Fluttertoast.showToast(msg: requestMinute.tryGetError()!.message);
-      return;
-    }
-    final minute = requestMinute.tryGetSuccess()!;
     final meetType = requestMeetType.tryGetSuccess()!;
     final items = requestMeetItems.tryGetSuccess()!;
     setState(() {
@@ -74,6 +74,7 @@ class _EditMinuteFormState extends State<EditMinuteForm> {
         items: _meetItems,
         addedItems: _minutes.assignments,
         minuteSubmit: widget.submitMinute,
+        minutes: _minutes,
       ),
       child: const MinuteForm(),
     );

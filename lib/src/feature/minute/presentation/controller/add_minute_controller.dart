@@ -6,14 +6,14 @@ class AddMinuteController extends StatelessWidget {
   static const name = 'minutes.add';
 
   /// Return the path for this controller or placeholder as /minutes/add/:meetTypeId
-  static path([int meetTypeId = 0]) => '/minutes/add/${meetTypeId == 0 ? ':meetTypeId' : meetTypeId}';
+  static path([String meetType = '']) => '/minutes/add/${meetType.isEmpty ? ':meetType' : meetType}';
 
-  final int meetTypeId;
+  final String meetType;
 
-  const AddMinuteController({required this.meetTypeId, super.key});
+  const AddMinuteController({required this.meetType, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return CreateMinute(meetApi: Meet(), sendMinuteApi: SendMinute(), meetTypeId: meetTypeId);
+    return CreateMinute(meetApi: Meet(), sendMinuteApi: SendMinute(), meetType: meetType);
   }
 }

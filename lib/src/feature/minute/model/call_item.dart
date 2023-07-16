@@ -29,7 +29,7 @@ class CallItem extends MinuteItem {
     return CallItem(
       name: map['name'] as String,
       call: map['call'] as String,
-      label: map['label'] as String,
+      label: (map['label'] as String).toLowerCase(),
       hash: generateRandomString(10),
     );
   }

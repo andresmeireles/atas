@@ -24,7 +24,7 @@ final _routes = GoRouter(
     GoRoute(
       path: AddMinuteController.path(),
       builder: (_, state) {
-        return AddMinuteController(meetTypeId: int.parse(state.pathParameters['meetTypeId'].toString()));
+        return AddMinuteController(meetType: state.pathParameters['meetType'].toString());
       },
     ),
     GoRoute(
